@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".UI.Admin.ui.aktivitas.AktivitasFragment">
+
+    <ImageView
+        android:id="@+id/gambar_logo"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/person"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="20dp"
+        />
+
+    <TextView
+        android:id="@+id/nama_sekolah"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/lokasi"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="@color/biru"
+        app:layout_constraintTop_toTopOf="@id/gambar_logo"
+        app:layout_constraintBottom_toBottomOf="@id/gambar_logo"
+        app:layout_constraintStart_toEndOf="@id/gambar_logo"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="20dp" />
+
+    <!-- Garis pemisah -->
+    <View
+        android:id="@+id/garis_pemisah"
+        android:layout_width="0dp"
+        android:layout_height="2dp"
+        android:background="@drawable/rounded_corner"
+        app:layout_constraintTop_toBottomOf="@id/gambar_logo"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="10dp" />
+
+    <!-- Judul -->
+    <TextView
+        android:id="@+id/text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Daftar Permintaan"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="@color/biru"
+        app:layout_constraintTop_toBottomOf="@id/garis_pemisah"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="12dp" />
+
+    <!-- Garis bawah judul -->
+    <View
+        android:id="@+id/garis_bawah_chip"
+        android:layout_width="0dp"
+        android:layout_height="2.7dp"
+        android:background="@drawable/gradient_line"
+        app:layout_constraintTop_toBottomOf="@id/text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp" />
+
+    <!-- Tombol chip Diminta -->
+    <TextView
+        android:id="@+id/diminta"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/bg_chip"
+        android:paddingLeft="16dp"
+        android:paddingTop="8dp"
+        android:paddingRight="16dp"
+        android:paddingBottom="8dp"
+        android:text="Diminta"
+        android:textColor="@android:color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/garis_bawah_chip" />
+
+    <!-- Tombol chip Dikirim -->
+    <TextView
+        android:id="@+id/dikirim"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:background="@drawable/bg_chip"
+        android:paddingLeft="16dp"
+        android:paddingTop="8dp"
+        android:paddingRight="16dp"
+        android:paddingBottom="8dp"
+        android:text="Dikirim"
+        android:textColor="@android:color/black"
+        app:layout_constraintStart_toEndOf="@id/diminta"
+        app:layout_constraintTop_toTopOf="@id/diminta" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvPermintaan"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        android:clipToPadding="false"
+        app:layout_constraintTop_toBottomOf="@id/dikirim"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/rvPermintaan"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="8dp" />
+</androidx.constraintlayout.widget.ConstraintLayout>

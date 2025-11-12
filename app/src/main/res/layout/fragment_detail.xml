@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".UI.DetailFragment">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <!-- ✅ Semua konten dibungkus dalam satu LinearLayout induk -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Bagian header -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:layout_marginStart="20dp"
+                    android:id="@+id/gambar_logo"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/person" />
+
+                <TextView
+                    android:id="@+id/nama_sekolah"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/lokasi"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/biru" />
+            </LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/rounded_corner" />
+
+
+            <ImageView
+                android:id="@+id/menu_back"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginBottom="6dp"
+                android:src="@drawable/baseline_arrow_back" />
+
+            <!-- Konten detail -->
+            <ImageView
+                android:id="@+id/ivLogo"
+                android:layout_marginTop="20dp"
+                android:layout_gravity="center"
+                android:layout_width="300dp"
+                android:layout_height="200dp"
+                android:scaleType="centerCrop" />
+
+            <TextView
+                android:id="@+id/Kode_barang"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="15sp"
+                android:paddingTop="8dp"
+                android:layout_marginStart="30dp"
+                android:text="Kode barang :" />
+
+            <TextView
+                android:id="@+id/Name_barang"
+                android:layout_marginStart="30dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="15sp"
+                android:text="Nama barang :"
+                android:paddingTop="8dp" />
+
+            <TextView
+                android:id="@+id/tvMerek"
+                android:layout_marginStart="30dp"
+                android:textSize="15sp"
+                android:text="Merek :"
+                android:layout_width="match_parent"
+                android:paddingTop="8dp"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/tvTipe"
+                android:layout_marginStart="30dp"
+                android:paddingTop="8dp"
+                android:text="Tipe :"
+                android:textSize="15sp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/tvHarga"
+                android:layout_marginStart="30dp"
+                android:paddingTop="8dp"
+                android:layout_width="match_parent"
+                android:textSize="15sp"
+                android:layout_height="wrap_content"
+                android:text="Harga :" />
+
+            <TextView
+                android:id="@+id/tvStok"
+                android:layout_marginStart="30dp"
+                android:layout_width="match_parent"
+                android:textSize="15sp"
+                android:layout_height="wrap_content"
+                android:paddingTop="8dp"
+                android:text="Stok :" />
+
+            <TextView
+                android:id="@+id/text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="vertical"
+                android:padding="8dp"
+                android:text="Deskripsi"
+                android:layout_marginStart="30dp"
+                android:layout_marginEnd="30dp"
+                android:textSize="14sp"
+                android:layout_marginTop="10dp"
+                android:lineSpacingExtra="2dp" />
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:id="@+id/tvdeslabel"
+                android:layout_width="350dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/bg_line"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:id="@+id/tvDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/biru"
+                    android:textStyle="normal"
+                    android:hint="Deskripsi barang"
+                    android:inputType="textMultiLine" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</FrameLayout>

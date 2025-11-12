@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="28"
+    android:viewportHeight="28">
+
+    <!-- Lingkaran abu-abu -->
+    <path
+        android:fillColor="#A7A7A7"
+        android:pathData="M14,2C7.37,2 2,7.37 2,14C2,20.63 7.37,26 14,26C20.63,26 26,20.63 26,14C26,7.37 20.63,2 14,2Z" />
+
+    <!-- Ikon tempat sampah (lebih kecil agar pas di dalam lingkaran) -->
+    <path
+        android:fillColor="#FF000000"
+        android:pathData="M8,20c0,1.1 0.9,2 2,2h8c1.1,0 2,-0.9 2,-2V9H8v11zM21,6h-3.5l-1,-1h-5l-1,1H6v2h15V6z" />
+</vector>

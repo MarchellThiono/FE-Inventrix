@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="16dp"
+    android:layout_marginVertical="8dp"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="4dp"
+    android:backgroundTint="@android:color/white">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="12dp">
+
+        <!-- Ikon peringatan -->
+        <ImageView
+            android:id="@+id/iconPeringatan"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:src="@drawable/baseline_warning_amber_24"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <!-- Judul peringatan -->
+        <TextView
+            android:id="@+id/tvJudul"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Peringatan"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/biru"
+            android:layout_marginStart="8dp"
+            app:layout_constraintStart_toEndOf="@id/iconPeringatan"
+            app:layout_constraintTop_toTopOf="@id/iconPeringatan"
+            app:layout_constraintBottom_toBottomOf="@id/iconPeringatan" />
+
+        <!-- Tombol delete di kanan atas -->
+        <ImageView
+            android:id="@+id/btnDelete"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/baseline_delete_24"
+            app:layout_constraintTop_toTopOf="@id/tvJudul"
+            app:layout_constraintBottom_toBottomOf="@id/tvJudul"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <!-- Isi pesan peringatan -->
+        <TextView
+            android:id="@+id/tvIsiPeringatan"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Stok Nama Barang (Kode Barang) tinggal 10"
+            android:textSize="14sp"
+            android:textColor="@android:color/black"
+            android:layout_marginTop="6dp"
+            app:layout_constraintTop_toBottomOf="@id/tvJudul"
+            app:layout_constraintStart_toStartOf="@id/tvJudul"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <!-- Tanggal -->
+        <TextView
+            android:id="@+id/tvTanggal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="10-05-2025"
+            android:textSize="12sp"
+            android:textColor="@android:color/darker_gray"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@id/tvIsiPeringatan"
+            app:layout_constraintStart_toStartOf="@id/tvIsiPeringatan" />
+
+        <!-- Waktu -->
+        <TextView
+            android:id="@+id/tvWaktu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="12:20:05"
+            android:textSize="12sp"
+            android:textColor="@android:color/darker_gray"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@id/tvIsiPeringatan"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>

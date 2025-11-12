@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">Inventrix</string>
+    <string name="lokasi">CV.sejahtera Bahagia</string>
+    <string name="masuk">Masuk</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_main_gudang">MainActivityGudang</string>
+    <string name="title_home">Beranda</string>
+    <string name="title_dashboard">Permintaan</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="lanjut_buat_laporan">Lanjut Buat Laporan</string>
+    <string name="kurangi_stok">Kurangi Stok</string>
+    <string name="tambah_stok">Tambah Stok</string>
+    <string name="title_activity_main_admin">MainAdminActivity</string>
+    <string name="pilih_jenis_laporan">Pilih Jenis Laporan</string>
+    <string name="riwayat">Riwayat</string>
+    <string name="aktivitas">Aktivitas</string>
+    <string name="keranjang">Keranjang</string>
+    <string name="konfirmasi">Konfirmasi</string>
+    <string name="format_jpg_size_1_mb">format .jpg size 1 MB</string>
+    <string name="tambah_gambar">Tambah Gambar</string>
+</resources>

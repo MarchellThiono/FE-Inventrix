@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".UI.LoginFragment">
+
+
+    <LinearLayout
+        android:id="@+id/header_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="40dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:id="@+id/gambar_logo"
+            android:src="@drawable/person"
+            android:layout_width="50dp"
+            android:layout_height="50dp" />
+
+        <TextView
+            android:id="@+id/text_lokasi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/lokasi"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@color/biru"
+            android:padding="8dp"/>
+    </LinearLayout>
+
+    <!-- App Name -->
+    <TextView
+        android:id="@+id/app_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/app_name"
+        android:textSize="50sp"
+        android:textStyle="italic|bold"
+        android:textColor="@color/biru"
+        android:layout_marginTop="30dp"
+        app:layout_constraintTop_toBottomOf="@id/header_layout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- Username -->
+    <EditText
+        android:id="@+id/input_username"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Masukan Nama"
+        android:textColor="@color/black"
+        android:drawablePadding="8dp"
+        android:drawableStart="@drawable/person"
+        android:padding="15dp"
+        android:layout_marginTop="150dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        app:layout_constraintTop_toBottomOf="@id/app_name"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- Password -->
+    <EditText
+        android:id="@+id/input_KataSandi"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Masukan Kata sandi"
+        android:drawablePadding="8dp"
+        android:textColor="@color/black"
+        android:padding="15dp"
+        android:drawableStart="@drawable/lock_icon"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        app:layout_constraintTop_toBottomOf="@id/input_username"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- Button Login -->
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/button_login"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:text="@string/masuk"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:background="@drawable/tombollogin_selector"
+        android:layout_marginTop="35dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        app:layout_constraintTop_toBottomOf="@id/input_KataSandi"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+
+    <TextView
+        android:id="@+id/text_masuk_dengan"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Masuk dengan akun "
+        android:textSize="13sp"
+        android:textColor="@color/black"
+        android:layout_marginTop="50dp"
+        app:layout_constraintTop_toBottomOf="@id/button_login"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/tamu"
+        app:layout_constraintHorizontal_chainStyle="packed"/>
+
+
+    <TextView
+        android:id="@+id/tamu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="guest"
+        android:textColor="@color/biru"
+        android:textSize="13sp"
+        app:layout_constraintBaseline_toBaselineOf="@id/text_masuk_dengan"
+        app:layout_constraintStart_toEndOf="@id/text_masuk_dengan"
+        app:layout_constraintEnd_toEndOf="parent"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

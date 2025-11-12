@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation2"
+    app:startDestination="@+id/navigation_home">
+
+    <fragment
+        android:id="@+id/navigation_home"
+        android:name="com.example.inventrix.UI.Admin.ui.home.HomeFragment"
+        android:label="Home"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_tambahBarangFragment"
+            app:destination="@id/tambahBarangFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_keranjang"
+        android:name="com.example.inventrix.UI.Admin.ui.keranjang.KeranjangFragment"
+        android:label="@string/keranjang"
+        tools:layout="@layout/fragment_keranjang" />
+
+    <fragment
+        android:id="@+id/navigation_aktivitas"
+        android:name="com.example.inventrix.UI.Admin.ui.aktivitas.AktivitasFragment"
+        android:label="@string/aktivitas"
+        tools:layout="@layout/fragment_aktivitas" />
+
+    <fragment
+        android:id="@+id/navigation_riwayat"
+        android:name="com.example.inventrix.UI.Admin.ui.riwayat.RiwayatFragment"
+        android:label="@string/riwayat"
+        tools:layout="@layout/fragment_riwayat"/>
+
+    <fragment
+        android:id="@+id/tambahBarangFragment"
+        android:name="com.example.inventrix.UI.Admin.ui.home.TamabahBarangFragment"
+        android:label="Tambah Barang"
+        tools:layout="@layout/fragment_tamabah_barang" />
+
+
+
+</navigation>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/navigation_home"
+        android:icon="@drawable/ic_home_black_24dp"
+        android:title="@string/title_home" />
+    <item
+        android:id="@+id/navigation_keranjang"
+        android:icon="@drawable/ic_keranjang"
+        android:title="@string/keranjang" />
+    <item
+        android:id="@+id/navigation_aktivitas"
+        android:icon="@drawable/clip_time"
+        android:title="@string/aktivitas" />
+    <item
+        android:id="@+id/navigation_riwayat"
+        android:icon="@drawable/ic_riwayat"
+        android:title="@string/riwayat"/>
+</menu>

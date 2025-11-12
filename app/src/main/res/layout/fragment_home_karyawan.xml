@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".UI.Karyawan.HomeKaryawanFragment">
+
+    <!-- KONTEN UTAMA -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <!-- Header -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:id="@+id/gambar_logo"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/person" />
+
+            <TextView
+                android:id="@+id/nama_sekolah"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/lokasi"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/biru" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/rounded_corner" />
+
+        <!-- Search -->
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/searchViewBarang"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:queryHint="Masukkan nama barang"
+            android:iconifiedByDefault="false"
+            android:layout_margin="20dp"
+            android:background="@drawable/search_bg"
+            android:elevation="4dp"
+            android:padding="5dp" />
+
+        <!-- Filter chip -->
+        <TextView
+            android:id="@+id/chipSemua"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Merek"
+            android:background="@drawable/bg_chip"
+            android:textColor="@android:color/black"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:layout_marginStart="26dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:layout_marginEnd="8dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2.7dp"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/gradient_line" />
+
+        <!-- SWIPE REFRESH UNTUK LIST -->
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipeRefresh"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:paddingTop="16dp">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <!-- Jika data kosong -->
+                <TextView
+                    android:id="@+id/tv_empty_state"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Belum ada barang yang tersedia."
+                    android:gravity="center"
+                    android:visibility="gone"
+                    android:textSize="16sp"
+                    android:textColor="@color/biru"
+                    android:layout_marginTop="40dp"
+                    android:layout_marginBottom="10dp" />
+
+                <!-- RecyclerView -->
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/nama_barang_karyawan"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:scrollbars="vertical" />
+
+            </FrameLayout>
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+    </LinearLayout>
+
+    <!-- PROGRESS BAR DI ATAS SEMUA -->
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        android:indeterminate="true" />
+
+</FrameLayout>

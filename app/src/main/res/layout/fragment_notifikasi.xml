@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".UI.Admin.ui.home.NotifikasiFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+    <!-- Header (logo + nama sekolah) -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:id="@+id/gambar_logo"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="20dp"
+            android:src="@drawable/person" />
+
+        <TextView
+            android:id="@+id/nama_sekolah"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:text="@string/lokasi"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@color/biru" />
+    </LinearLayout>
+
+    <!-- Garis pemisah di bawah header -->
+    <View
+        android:id="@+id/garis_pemisah_atas"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/rounded_corner" />
+
+    <!-- Tombol back -->
+    <ImageView
+        android:id="@+id/btnback"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="20dp"
+        android:src="@drawable/baseline_arrow_back" />
+
+        <TextView
+            android:id="@+id/text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Peringatan"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp" />
+        <View
+            android:id="@+id/garis_bawah_chip"
+            android:layout_width="match_parent"
+            android:layout_height="2.7dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/gradient_line"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvPeringatan"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="8dp"/>
+
+        <TextView
+            android:id="@+id/Ym"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Pemberitahuan"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="20dp"/>
+
+        <View
+            android:id="@+id/garis_bawah_chip2"
+            android:layout_width="match_parent"
+            android:layout_height="2.7dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/gradient_line"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvPemberitahuan"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp" />
+
+    </LinearLayout>
+
+
+</FrameLayout>

@@ -1,0 +1,16 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="80dp"
+    android:height="80dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <!-- Lingkaran abu-abu muda -->
+    <path
+        android:fillColor="#E0E0E0"
+        android:pathData="M12,2a10,10 0,1 1,-0.001,20.001A10,10 0,0 1,12,2z" />
+
+    <!-- Tanda plus hitam -->
+    <path
+        android:fillColor="#000000"
+        android:pathData="M11,7h2v4h4v2h-4v4h-2v-4H7v-2h4z" />
+</vector>

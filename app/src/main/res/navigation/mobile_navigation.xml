@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_beranda">
+
+    <!-- ✅ Home Gudang -->
+    <fragment
+        android:id="@+id/navigation_beranda"
+        android:name="com.example.inventrix.UI.Gudang.ui.beranda.HomeGudangFragment"
+        android:label="@string/title_home"
+        tools:layout="@layout/fragment_home_gudang">
+
+        <!-- 🔹 Aksi menuju DetailFragment -->
+        <action
+            android:id="@+id/action_homeGudangFragment_to_detailFragment"
+            app:destination="@id/detailFragment" />
+
+        <!-- (Aksi lama tetap biarkan) -->
+        <action
+            android:id="@+id/action_homeGudang_to_buatLaporanFragment"
+            app:destination="@id/navigation_buat_laporan" />
+    </fragment>
+
+    <!-- ✅ Detail Barang -->
+    <fragment
+        android:id="@+id/detailFragment"
+        android:name="com.example.inventrix.UI.DetailFragment"
+        android:label="Detail Barang"
+        tools:layout="@layout/fragment_detail" />
+
+    <!-- ✅ Permintaan Barang -->
+    <fragment
+        android:id="@+id/navigation_permintaan"
+        android:name="com.example.inventrix.UI.Gudang.ui.permintaan.PermintanGudangFragment"
+        android:label="@string/title_dashboard"
+        tools:layout="@layout/fragment_permintaan_gudang" />
+
+    <!-- ✅ Buat Laporan -->
+    <fragment
+        android:id="@+id/navigation_buat_laporan"
+        android:name="com.example.inventrix.UI.Gudang.ui.BuatLaporanFragment"
+        android:label="Buat Laporan"
+        tools:layout="@layout/fragment_buat_laporan" />
+
+</navigation>
