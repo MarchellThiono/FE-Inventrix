@@ -13,6 +13,13 @@
         <action
             android:id="@+id/action_homeFragment_to_tambahBarangFragment"
             app:destination="@id/tambahBarangFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_kelolaMerekFragment"
+            app:destination="@id/kelolaMerekFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_notifikasiFragment"
+            app:destination="@id/notifikasiFragment" />
+
     </fragment>
 
     <fragment
@@ -37,8 +44,32 @@
         android:id="@+id/tambahBarangFragment"
         android:name="com.example.inventrix.UI.Admin.ui.home.TamabahBarangFragment"
         android:label="Tambah Barang"
-        tools:layout="@layout/fragment_tamabah_barang" />
+        tools:layout="@layout/fragment_tamabah_barang" >
+    <action
+        android:id="@+id/action_tambahBarangFragment_to_navigation_home"
+        app:destination="@id/navigation_home" />
+    </fragment>
 
+    <fragment
+        android:id="@+id/kelolaMerekFragment"
+        android:name="com.example.inventrix.UI.Admin.ui.home.KelolaMerekFragment"
+        android:label="Kelola Merek"
+        tools:layout="@layout/fragment_kelola_merek">
+
+        <action
+            android:id="@+id/action_kelolaMerekFragment_to_navigation_home"
+            app:destination="@id/navigation_home" />
+
+    </fragment>
+
+    <fragment android:id="@+id/notifikasiFragment"
+        android:name="com.example.inventrix.UI.Admin.ui.home.NotifikasiFragment"
+        android:label="Notifikasi"
+        tools:layout="@layout/fragment_notifikasi">
+        <action
+            android:id="@+id/action_notifikasiFragment_to_navigation_home"
+            app:destination="@id/navigation_home" />
+    </fragment>
 
 
 </navigation>

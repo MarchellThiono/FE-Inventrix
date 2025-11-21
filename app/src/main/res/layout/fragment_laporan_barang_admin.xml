@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".UI.Admin.ui.home.LaporanBarangAdminFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+    <!-- Bagian header -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:layout_marginStart="20dp"
+            android:id="@+id/gambar_logo"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/person" />
+
+        <TextView
+            android:id="@+id/nama_sekolah"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/lokasi"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@color/biru" />
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/rounded_corner" />
+
+    <ImageView
+        android:id="@+id/menu_back"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="6dp"
+        android:src="@drawable/baseline_arrow_back" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Pilih Jenis Laporan"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:textSize="18sp"
+            android:textStyle="bold"/>
+
+        <RadioGroup
+            android:id="@+id/rg_number"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:orientation="vertical">
+            <RadioButton
+                android:id="@+id/rb_barangHilang"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Barang Hilang"/>
+
+            <RadioButton
+                android:id="@+id/rb_barangRusak"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Barang Rusak"/>
+        </RadioGroup>
+
+        <TextView
+            android:id="@+id/rvTanggal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tanggal :"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/Kode_barang"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:paddingTop="15dp"
+            android:layout_marginStart="20dp"
+            android:text="Kode barang :"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/Name_barang"
+            android:layout_marginStart="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:text="Nama barang :"
+            android:paddingTop="15dp" />
+
+        <TextView
+            android:id="@+id/tvMerek"
+            android:layout_marginStart="20dp"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:text="Merek :"
+            android:layout_width="match_parent"
+            android:paddingTop="15dp"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/tvLokasi"
+            android:layout_marginStart="20dp"
+            android:textStyle="bold"
+            android:textSize="15sp"
+            android:text="Lokasi :"
+            android:layout_width="match_parent"
+            android:paddingTop="15dp"
+            android:layout_height="wrap_content" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginStart="20dp"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/rvText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Jumlah Barang Hilang : "
+                android:textStyle="bold"
+                android:paddingTop="15dp"
+                android:textSize="15sp"/>
+
+            <EditText
+                android:id="@+id/jumlahbarang"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:background="@drawable/bg_line"/>
+        </LinearLayout>
+        <Button
+            android:id="@+id/rvKirim"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:text="Kirim"
+            android:layout_margin="20dp"
+            android:layout_marginTop="30dp"/>
+    </LinearLayout>
+</FrameLayout>

@@ -1,18 +1,18 @@
 package com.example.inventrix.Adapter
 
-
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.inventrix.Model.MerekData
 import com.example.inventrix.R
 
 class ListKelolaMerek(
-    private val merekList: MutableList<String>,
-    private val onEdit: (String) -> Unit,
-    private val onDelete: (String) -> Unit
+    private val merekList: MutableList<MerekData>,
+    private val onEdit: (MerekData) -> Unit,
+    private val onDelete: (MerekData) -> Unit
 ) : RecyclerView.Adapter<ListKelolaMerek.ViewHolder>() {
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -29,7 +29,8 @@ class ListKelolaMerek(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val merek = merekList[position]
-        holder.namaMerek.text = merek
+
+        holder.namaMerek.text = merek.namaMerek
 
         holder.btnEdit.setOnClickListener { onEdit(merek) }
         holder.btnDelete.setOnClickListener { onDelete(merek) }
@@ -37,21 +38,30 @@ class ListKelolaMerek(
 
     override fun getItemCount(): Int = merekList.size
 
-    fun addMerek(nama: String) {
-        merekList.add(nama)
+    /** ------------------------------------------------------------------
+     *  TAMBAH MEREK (result dari API)
+     * ------------------------------------------------------------------ */
+    fun addMerek(data: MerekData) {
+        merekList.add(data)
         notifyItemInserted(merekList.size - 1)
     }
 
-    fun updateMerek(oldName: String, newName: String) {
-        val index = merekList.indexOf(oldName)
+    /** ------------------------------------------------------------------
+     *  EDIT MEREK
+     * ------------------------------------------------------------------ */
+    fun updateMerek(updated: MerekData) {
+        val index = merekList.indexOfFirst { it.id == updated.id }
         if (index != -1) {
-            merekList[index] = newName
+            merekList[index] = updated
             notifyItemChanged(index)
         }
     }
 
-    fun removeMerek(nama: String) {
-        val index = merekList.indexOf(nama)
+    /** ------------------------------------------------------------------
+     *  DELETE MEREK
+     * ------------------------------------------------------------------ */
+    fun removeMerek(id: Int) {
+        val index = merekList.indexOfFirst { it.id == id }
         if (index != -1) {
             merekList.removeAt(index)
             notifyItemRemoved(index)

@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".UI.DetailFragment">
+    tools:context=".UI.Admin.ui.home.DetailAdminFragment">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -47,7 +47,6 @@
                 android:layout_marginTop="10dp"
                 android:background="@drawable/rounded_corner" />
 
-
             <ImageView
                 android:id="@+id/menu_back"
                 android:layout_width="30dp"
@@ -56,6 +55,30 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginBottom="6dp"
                 android:src="@drawable/baseline_arrow_back" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:id="@+id/rvhapus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_remove"
+                android:layout_marginStart="250dp"/>
+
+            <TextView
+                android:id="@+id/rvhapusbarang"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Hapus Barang"
+                android:layout_marginStart="10dp"
+                android:textSize="15sp"/>
+
+        </LinearLayout>
 
             <!-- Konten detail -->
             <ImageView
@@ -95,22 +118,22 @@
 
 
             <TextView
-                android:id="@+id/tvHarga"
+                android:id="@+id/tvHarga_Beli"
                 android:layout_marginStart="30dp"
                 android:paddingTop="8dp"
                 android:layout_width="match_parent"
                 android:textSize="15sp"
                 android:layout_height="wrap_content"
-                android:text="Harga :" />
+                android:text="Harga Beli :" />
 
             <TextView
-                android:id="@+id/tvStok"
+                android:id="@+id/tvHarga_Jual"
                 android:layout_marginStart="30dp"
+                android:paddingTop="8dp"
                 android:layout_width="match_parent"
                 android:textSize="15sp"
                 android:layout_height="wrap_content"
-                android:paddingTop="8dp"
-                android:text="Stok :" />
+                android:text="Harga Jual :" />
 
             <TextView
                 android:id="@+id/text"
@@ -150,7 +173,43 @@
                     android:textStyle="normal"
                     android:hint="Deskripsi barang"
                     android:inputType="textMultiLine" />
+
             </LinearLayout>
+            <TextView
+                android:id="@+id/tvStok_toko"
+                android:layout_marginStart="30dp"
+                android:layout_width="match_parent"
+                android:textSize="15sp"
+                android:layout_height="wrap_content"
+                android:paddingTop="8dp"
+                android:text="Stok Toko :" />
+
+            <TextView
+                android:id="@+id/tvStok_gudang"
+                android:layout_marginStart="30dp"
+                android:layout_width="match_parent"
+                android:textSize="15sp"
+                android:layout_height="wrap_content"
+                android:paddingTop="8dp"
+                android:text="Stok Gudang :" />
+
+            <TextView
+                android:id="@+id/tvlapor"
+                android:layout_marginStart="30dp"
+                android:layout_width="match_parent"
+                android:textSize="15sp"
+                android:layout_height="wrap_content"
+                android:paddingTop="15dp"
+                android:text="Laporkan Barang Bermasalah" />
+
+            <Button
+                android:id="@+id/tvpermintaan"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_margin="20dp"
+                android:text="Buat Permintaan Ke Gudang"/>
         </LinearLayout>
     </ScrollView>
+
 </FrameLayout>

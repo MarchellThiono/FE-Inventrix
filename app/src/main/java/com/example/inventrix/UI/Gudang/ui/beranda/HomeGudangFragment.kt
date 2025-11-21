@@ -53,14 +53,14 @@ class HomeGudangFragment : Fragment() {
      *  SETUP RECYCLER VIEW BARANG
      *  ------------------------------*/
     private fun setupRecyclerView() {
-        adapter = ListBarang(role = "gudang") { item ->
-            val bundle = Bundle().apply {
-                putInt("id", item.id ?: -1)
+        adapter = ListBarang(
+            role = "gudang",
+            onItemClick = { item ->
+                val bundle = Bundle().apply { putInt("id", item.id ?: -1) }
+                findNavController().navigate(R.id.action_homeGudangFragment_to_detailFragment, bundle)
             }
+        )
 
-            // Navigasi ke DetailFragment
-            findNavController().navigate(R.id.action_homeGudangFragment_to_detailFragment, bundle)
-        }
 
         binding.rvBarangGudang.layoutManager = LinearLayoutManager(requireContext())
         binding.rvBarangGudang.adapter = adapter

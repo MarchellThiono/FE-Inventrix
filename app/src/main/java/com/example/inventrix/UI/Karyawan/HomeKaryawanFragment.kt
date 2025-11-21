@@ -48,25 +48,21 @@ class HomeKaryawanFragment : Fragment() {
      *  SETUP RECYCLERVIEW & ITEM CLICK
      *  ------------------------------------*/
     private fun setupRecyclerView() {
-        adapter = ListBarang(role = "karyawan") { item ->
-            val bundle = Bundle().apply {
-                putInt("id", item.id ?: -1)
+        adapter = ListBarang(
+            role = "karyawan",
+            onItemClick = { item ->
+                val bundle = Bundle().apply { putInt("id", item.id ?: -1) }
+                val detailFragment = com.example.inventrix.UI.DetailFragment()
+                detailFragment.arguments = bundle
+
+                requireActivity().supportFragmentManager.beginTransaction()
+                    .setCustomAnimations(R.anim.slide_in_right, R.anim.fade_out, R.anim.fade_in, R.anim.slide_out_right)
+                    .replace(R.id.frame_container, detailFragment)
+                    .addToBackStack(null)
+                    .commit()
             }
+        )
 
-            val detailFragment = com.example.inventrix.UI.DetailFragment()
-            detailFragment.arguments = bundle
-
-            requireActivity().supportFragmentManager.beginTransaction()
-                .setCustomAnimations(
-                    R.anim.slide_in_right,
-                    R.anim.fade_out,
-                    R.anim.fade_in,
-                    R.anim.slide_out_right
-                )
-                .replace(R.id.frame_container, detailFragment)
-                .addToBackStack(null)
-                .commit()
-        }
 
         binding.namaBarangKaryawan.layoutManager = LinearLayoutManager(requireContext())
         binding.namaBarangKaryawan.adapter = adapter

@@ -47,54 +47,58 @@ class HomeFragment : Fragment() {
         setupChipMerek()
         loadBarang()
 
-        // Tombol tambah barang (hanya admin/owner)
         binding.btntmbh.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_tambahBarangFragment)
+        }
+        binding.kelolaMerek.setOnClickListener {
+            findNavController().navigate(R.id.action_homeFragment_to_kelolaMerekFragment)
+        }
+        binding.notif.setOnClickListener{
+            findNavController().navigate(R.id.action_homeFragment_to_notifikasiFragment)
         }
 
         return root
     }
 
-    /** -------------------------------
-     *  SETUP RECYCLER VIEW BARANG
-     *  ------------------------------*/
     private fun setupRecyclerView() {
         val prefs = requireContext().getSharedPreferences("InventrixSession", Context.MODE_PRIVATE)
         val role = prefs.getString("ROLE", "owner") ?: "owner"
 
-        adapter = ListBarang(role) { item ->
-            val bundle = Bundle().apply {
-                putInt("id", item.id ?: -1)
+        adapter = ListBarang(role,
+            onItemClick = { item -> },
+            onEditClick = { item ->
+                val bundle = Bundle().apply {
+                    putBoolean("isEdit", true)
+                    putInt("id", item.id ?: -1)
+                }
+                findNavController().navigate(R.id.action_homeFragment_to_tambahBarangFragment, bundle)
             }
+        )
 
-            // Arahkan ke halaman detail barang
-//            findNavController().navigate(R.id.action_homeFragment_to_detailBarangFragment, bundle)
-        }
+        val lm = LinearLayoutManager(requireContext())
+        lm.reverseLayout = false      // item mulai dari atas
+        lm.stackFromEnd = false       // jangan scroll ke bawah otomatis
 
-        binding.rvbarangadmin.layoutManager = LinearLayoutManager(requireContext())
+        binding.rvbarangadmin.layoutManager = lm
+
+        (binding.rvbarangadmin.itemAnimator as? androidx.recyclerview.widget.SimpleItemAnimator)
+            ?.supportsChangeAnimations = false
+
         binding.rvbarangadmin.adapter = adapter
     }
 
-    /** -------------------------------
-     *  LOAD DATA DARI BACKEND
-     *  ------------------------------*/
+
     private fun loadBarang() {
         binding.progressBar.visibility = View.VISIBLE
 
         ApiClinet.instance.getBarangList().enqueue(object : Callback<TampilBarangRes> {
-            override fun onResponse(
-                call: Call<TampilBarangRes>,
-                response: Response<TampilBarangRes>
-            ) {
+            override fun onResponse(call: Call<TampilBarangRes>, response: Response<TampilBarangRes>) {
                 binding.progressBar.visibility = View.GONE
-
                 if (response.isSuccessful && response.body()?.data != null) {
                     allBarangList = response.body()?.data?.filterNotNull() ?: emptyList()
-
                     if (allBarangList.isEmpty()) {
                         Toast.makeText(requireContext(), "Belum ada data barang", Toast.LENGTH_SHORT).show()
                     }
-
                     adapter.updateData(allBarangList)
                 } else {
                     Toast.makeText(requireContext(), "Gagal memuat data barang", Toast.LENGTH_SHORT).show()
@@ -108,9 +112,6 @@ class HomeFragment : Fragment() {
         })
     }
 
-    /** -------------------------------
-     *  FITUR SEARCH BAR
-     *  ------------------------------*/
     private fun setupSearchBar() {
         val searchView = binding.searchViewBarang
         searchView.queryHint = "Cari nama atau kode barang"
@@ -128,9 +129,6 @@ class HomeFragment : Fragment() {
         })
     }
 
-    /** -------------------------------
-     *  FITUR PILIH MEREK (BOTTOM SHEET)
-     *  ------------------------------*/
     private fun setupChipMerek() {
         val chipMerek = binding.chipSemua
         chipMerek.setOnClickListener {
@@ -177,13 +175,9 @@ class HomeFragment : Fragment() {
         })
     }
 
-    /** -------------------------------
-     *  FILTER BARANG BERDASARKAN SEARCH & MEREK
-     *  ------------------------------*/
     private fun filterBarang(query: String?) {
         var filtered = allBarangList
 
-        // 🔍 Filter berdasarkan nama/kode barang
         if (!query.isNullOrEmpty()) {
             filtered = filtered.filter { item ->
                 val nama = item.namaBarang?.lowercase() ?: ""
@@ -192,7 +186,6 @@ class HomeFragment : Fragment() {
             }
         }
 
-        // 🔹 Filter berdasarkan merek (jika ada yang dipilih)
         merekTerpilih?.let { merek ->
             filtered = filtered.filter { it.merek?.equals(merek, ignoreCase = true) == true }
         }
