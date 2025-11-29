@@ -4,26 +4,44 @@ import com.example.inventrix.Model.ReqKeranjang
 
 object KeranjangManager {
 
-    private val keranjangList = mutableListOf<ReqKeranjang>()
+    private val keranjangMap = mutableMapOf<Int, ReqKeranjang>()
 
-    fun tambahBarang(barang: ReqKeranjang) {
-        val existing = keranjangList.find { it.kodeBarang == barang.kodeBarang }
-        if (existing != null) {
-            existing.jumlah++
+    // tambahAtauUpdate: tambahkan atau update jumlah
+    fun tambahAtauUpdate(barang: ReqKeranjang, qty: Int) {
+        if (qty <= 0) {
+            keranjangMap.remove(barang.barangId)
+            return
+        }
+
+        val exist = keranjangMap[barang.barangId]
+
+        if (exist != null) {
+            // update jumlah (mutasi pada object yang tersimpan)
+            exist.jumlah = qty
         } else {
-            keranjangList.add(barang)
+            // copy untuk menghindari referensi luar bermasalah
+            keranjangMap[barang.barangId] = barang.copy(jumlah = qty)
         }
     }
 
-    fun hapusBarang(barang: ReqKeranjang) {
-        keranjangList.remove(barang)
+    fun hapus(barangId: Int) {
+        keranjangMap.remove(barangId)
     }
 
-    fun getKeranjang(): MutableList<ReqKeranjang> = keranjangList
+    fun getKeranjang(): List<ReqKeranjang> {
+        return keranjangMap.values.toList()
+    }
 
-    fun getTotalHarga(): Int = keranjangList.sumOf { it.harga * it.jumlah }
+    // Ambil jumlah (dipakai di adapter ListBarang agar counter sinkron)
+    fun getJumlahForBarang(barangId: Int): Int {
+        return keranjangMap[barangId]?.jumlah ?: 0
+    }
+
+    fun getTotalHarga(): Int {
+        return keranjangMap.values.sumOf { it.harga * it.jumlah }
+    }
 
     fun clear() {
-        keranjangList.clear()
+        keranjangMap.clear()
     }
 }

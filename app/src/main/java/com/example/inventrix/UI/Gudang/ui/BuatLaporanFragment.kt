@@ -6,12 +6,19 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.inventrix.Adapter.ListLaporanBarang
-import com.example.inventrix.Model.ReqPermintaanBarang
-import com.example.inventrix.R
+import com.example.inventrix.Model.BarangDipilihGudang
+import com.example.inventrix.Model.ReqCreateLaporan
+import com.example.inventrix.Model.ReqLaporanItem
+import com.example.inventrix.Model.ResPesan
+import com.example.inventrix.Server.ApiClinet
 import com.example.inventrix.databinding.FragmentBuatLaporanBinding
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class BuatLaporanFragment : Fragment() {
 
@@ -19,13 +26,7 @@ class BuatLaporanFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var adapter: ListLaporanBarang
-
-    // contoh data dummy (nanti bisa diganti dengan data dari fragment sebelumnya)
-    private val barangDipilih = listOf(
-        ReqPermintaanBarang("Kipas Angin", "Maspion", "BRG001", 10, null, "diminta"),
-        ReqPermintaanBarang("Setrika", "LG", "BRG002", 5, null, "diminta"),
-        ReqPermintaanBarang("Dispenser", "Miyako", "BRG003", 8, null, "diminta")
-    )
+    private lateinit var barangDipilih: List<BarangDipilihGudang>
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -33,11 +34,33 @@ class BuatLaporanFragment : Fragment() {
     ): View {
         _binding = FragmentBuatLaporanBinding.inflate(inflater, container, false)
 
+        ambilDataDariBundle()
         setupRecyclerView()
         setupSpinner()
         setupListeners()
 
         return binding.root
+    }
+
+    private fun ambilDataDariBundle() {
+        val mapSelected =
+            arguments?.getSerializable("selected_barang") as? HashMap<Int, Int>
+
+        if (mapSelected == null || mapSelected.isEmpty()) {
+            Toast.makeText(requireContext(), "Tidak ada barang dipilih", Toast.LENGTH_SHORT).show()
+            requireActivity().onBackPressedDispatcher.onBackPressed()
+            return
+        }
+
+        barangDipilih = mapSelected.map { (idBarang, jumlah) ->
+            BarangDipilihGudang(
+                barangId = idBarang,
+                nama = "Barang $idBarang",
+                merek = "",
+                kodeBarang = "BRG$idBarang",
+                stokGudang = jumlah       // jumlah klik dari Home
+            )
+        }
     }
 
     private fun setupRecyclerView() {
@@ -47,30 +70,26 @@ class BuatLaporanFragment : Fragment() {
     }
 
     private fun setupSpinner() {
-        val jenisLaporan = listOf("Barang Masuk", "Barang Hilang", "Barang Rusak")
+        val jenisList = listOf("Barang Masuk", "Barang Hilang", "Barang Rusak")
 
         val spinnerAdapter = ArrayAdapter(
             requireContext(),
             android.R.layout.simple_spinner_dropdown_item,
-            jenisLaporan
+            jenisList
         )
         binding.spinnerJenisLaporan.adapter = spinnerAdapter
 
-        binding.spinnerJenisLaporan.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>?,
-                view: View?,
-                position: Int,
-                id: Long
-            ) {
-                val selected = jenisLaporan[position]
-                // tampilkan kolom supplier hanya jika Barang Masuk
-                binding.layoutSupplier.visibility =
-                    if (selected == "Barang Masuk") View.VISIBLE else View.GONE
-            }
+        binding.spinnerJenisLaporan.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>?, view: View?, position: Int, id: Long
+                ) {
+                    binding.layoutSupplier.visibility =
+                        if (position == 0) View.VISIBLE else View.GONE
+                }
 
-            override fun onNothingSelected(parent: AdapterView<*>?) {}
-        }
+                override fun onNothingSelected(parent: AdapterView<*>?) {}
+            }
     }
 
     private fun setupListeners() {
@@ -79,8 +98,57 @@ class BuatLaporanFragment : Fragment() {
         }
 
         binding.btnKonfirmasi.setOnClickListener {
-            // TODO: Aksi konfirmasi laporan
+            submitLaporan()
         }
+    }
+
+    private fun submitLaporan() {
+        val jenisText = binding.spinnerJenisLaporan.selectedItem.toString()
+        val jenis = when (jenisText) {
+            "Barang Masuk" -> "MASUK"
+            "Barang Hilang" -> "HILANG"
+            "Barang Rusak" -> "RUSAK"
+            else -> "MASUK"
+        }
+
+        val supplier =
+            if (jenis == "MASUK") binding.etSupplier.text.toString().takeIf { it.isNotBlank() }
+            else null
+
+        if (jenis == "MASUK" && supplier.isNullOrBlank()) {
+            Toast.makeText(requireContext(), "Supplier wajib diisi", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val items = adapter.getListJumlah()
+            .filter { it.jumlah > 0 }
+            .map { ReqLaporanItem(it.barangId, it.jumlah, null) }
+
+        if (items.isEmpty()) {
+            Toast.makeText(requireContext(), "Minimal 1 barang harus diisi jumlahnya", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val body = ReqCreateLaporan(
+            jenis = jenis,
+            supplier = supplier,
+            items = items
+        )
+
+        ApiClinet.instance.createLaporan(body).enqueue(object : Callback<ResPesan> {
+            override fun onResponse(call: Call<ResPesan>, response: Response<ResPesan>) {
+                if (response.isSuccessful) {
+                    Toast.makeText(requireContext(), response.body()?.pesan ?: "Berhasil", Toast.LENGTH_LONG).show()
+                    requireActivity().onBackPressedDispatcher.onBackPressed()
+                } else {
+                    Toast.makeText(requireContext(), "Gagal mengirim laporan", Toast.LENGTH_LONG).show()
+                }
+            }
+
+            override fun onFailure(call: Call<ResPesan>, t: Throwable) {
+                Toast.makeText(requireContext(), "Error: ${t.message}", Toast.LENGTH_LONG).show()
+            }
+        })
     }
 
     override fun onDestroyView() {

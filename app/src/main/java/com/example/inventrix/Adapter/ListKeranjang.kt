@@ -3,14 +3,16 @@ package com.example.inventrix.Adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.Animation
-import android.view.animation.ScaleAnimation
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.inventrix.Model.ReqKeranjang
 import com.example.inventrix.R
+import com.example.inventrix.UI.Admin.ui.keranjang.KeranjangManager
+import com.example.inventrix.formatRupiah
 
 class ListKeranjang(
     private var listKeranjang: MutableList<ReqKeranjang>,
@@ -21,9 +23,10 @@ class ListKeranjang(
         val ivLogo: ImageView = itemView.findViewById(R.id.ivLogo)
         val tvName: TextView = itemView.findViewById(R.id.tvName)
         val tvMerek: TextView = itemView.findViewById(R.id.tvMerek)
-        val tvKodeBarang: TextView = itemView.findViewById(R.id.tvKodeBarang)
+        val tvKode: TextView = itemView.findViewById(R.id.tvKodeBarang)
         val tvHarga: TextView = itemView.findViewById(R.id.tvHarga)
         val tvJumlah: TextView = itemView.findViewById(R.id.tvJumlahKlik)
+
         val btnTambahAwal: ImageButton = itemView.findViewById(R.id.btnTambahAwal)
         val layoutCounter: View = itemView.findViewById(R.id.layoutCounter)
         val btnTambah: ImageButton = itemView.findViewById(R.id.btnTambah)
@@ -41,13 +44,19 @@ class ListKeranjang(
     override fun onBindViewHolder(holder: KeranjangViewHolder, position: Int) {
         val item = listKeranjang[position]
 
-        holder.tvName.text = item.nama
-        holder.tvMerek.text = item.merek
-        holder.tvKodeBarang.text = item.kodeBarang
-        holder.tvHarga.text = "Rp${item.harga}"
+        holder.tvName.text = item.namaBarang
+        holder.tvMerek.text = item.merek ?: ""
+        holder.tvKode.text = item.kodeBarang ?: ""
+
+        val totalHargaItem = item.harga * item.jumlah
+        holder.tvHarga.text = formatRupiah(totalHargaItem)
+
         holder.tvJumlah.text = item.jumlah.toString()
 
-        // 🔹 Atur visibilitas awal
+        Glide.with(holder.itemView.context)
+            .load(item.imageUrl)
+            .into(holder.ivLogo)
+
         if (item.jumlah > 0) {
             holder.btnTambahAwal.visibility = View.GONE
             holder.layoutCounter.visibility = View.VISIBLE
@@ -56,88 +65,60 @@ class ListKeranjang(
             holder.layoutCounter.visibility = View.GONE
         }
 
-        // 🔹 Klik tombol + awal → muncul layout counter dgn efek zoom-in
+        val stokToko = item.stokToko ?: 0
+
+        // ================================================
+        // 🔥 TOMBOL TAMBAH AWAL — CEK STOK
+        // ================================================
         holder.btnTambahAwal.setOnClickListener {
-            val zoomIn = ScaleAnimation(
-                0f, 1f,  // From X: 0 → To X: full size
-                0f, 1f,  // From Y: 0 → To Y: full size
-                Animation.RELATIVE_TO_SELF, 0.5f,  // Pivot X: center
-                Animation.RELATIVE_TO_SELF, 0.5f   // Pivot Y: center
-            ).apply {
-                duration = 200
-                fillAfter = true
+            if (stokToko <= 0) {
+                Toast.makeText(holder.itemView.context, "Stok barang tidak cukup", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
             }
 
-            holder.btnTambahAwal.visibility = View.GONE
-            holder.layoutCounter.visibility = View.VISIBLE
-            holder.layoutCounter.startAnimation(zoomIn)
-
-            item.jumlah = 1
-            holder.tvJumlah.text = "1"
-            onJumlahChange.invoke(getTotalHarga())
+            KeranjangManager.tambahAtauUpdate(item, 1)
+            refreshFromManager()
         }
 
-        // 🔹 Tombol tambah di counter
+        // ================================================
+        // 🔥 TOMBOL TAMBAH (+) — CEK STOK
+        // ================================================
         holder.btnTambah.setOnClickListener {
-            item.jumlah++
-            holder.tvJumlah.text = item.jumlah.toString()
+            val now = KeranjangManager.getJumlahForBarang(item.barangId)
+            val next = now + 1
 
-            // Efek zoom kecil di angka biar interaktif
-            val pulse = ScaleAnimation(
-                0.9f, 1f,
-                0.9f, 1f,
-                Animation.RELATIVE_TO_SELF, 0.5f,
-                Animation.RELATIVE_TO_SELF, 0.5f
-            ).apply {
-                duration = 100
-                fillAfter = true
+            if (next > stokToko) {
+                Toast.makeText(holder.itemView.context, "Stok barang tidak cukup", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
             }
-            holder.tvJumlah.startAnimation(pulse)
 
-            onJumlahChange.invoke(getTotalHarga())
+            KeranjangManager.tambahAtauUpdate(item, next)
+            refreshFromManager()
         }
 
-        // 🔹 Tombol kurang di counter → kalau jumlah = 0, sembunyikan counter (zoom-out)
+        // ================================================
+        // TOMBOL KURANG
+        // ================================================
         holder.btnKurang.setOnClickListener {
-            if (item.jumlah > 1) {
-                item.jumlah--
-                holder.tvJumlah.text = item.jumlah.toString()
-                onJumlahChange.invoke(getTotalHarga())
+            val now = KeranjangManager.getJumlahForBarang(item.barangId)
+
+            if (now > 1) {
+                KeranjangManager.tambahAtauUpdate(item, now - 1)
             } else {
-                val zoomOut = ScaleAnimation(
-                    1f, 0f,
-                    1f, 0f,
-                    Animation.RELATIVE_TO_SELF, 0.5f,
-                    Animation.RELATIVE_TO_SELF, 0.5f
-                ).apply {
-                    duration = 200
-                    fillAfter = true
-                }
-
-                holder.layoutCounter.startAnimation(zoomOut)
-
-                zoomOut.setAnimationListener(object : Animation.AnimationListener {
-                    override fun onAnimationStart(animation: Animation) {}
-                    override fun onAnimationEnd(animation: Animation) {
-                        holder.layoutCounter.visibility = View.GONE
-                        holder.btnTambahAwal.visibility = View.VISIBLE
-                    }
-                    override fun onAnimationRepeat(animation: Animation) {}
-                })
-
-                item.jumlah = 0
-                holder.tvJumlah.text = "0"
-                onJumlahChange.invoke(getTotalHarga())
+                KeranjangManager.hapus(item.barangId) // hapus jika sudah 0
             }
+            refreshFromManager()
         }
+    }
+
+    private fun refreshFromManager() {
+        val newList = KeranjangManager.getKeranjang().toMutableList()
+        updateData(newList)
+        onJumlahChange(KeranjangManager.getTotalHarga())
     }
 
     fun updateData(newList: MutableList<ReqKeranjang>) {
         listKeranjang = newList
         notifyDataSetChanged()
-    }
-
-    fun getTotalHarga(): Int {
-        return listKeranjang.sumOf { it.harga * it.jumlah }
     }
 }

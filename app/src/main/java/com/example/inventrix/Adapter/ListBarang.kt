@@ -6,122 +6,139 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.inventrix.Model.DataItem
 import com.example.inventrix.R
+import com.example.inventrix.UI.Admin.ui.keranjang.KeranjangManager
+import com.example.inventrix.formatRupiah
+import com.example.inventrix.toHargaInt
 
 class ListBarang(
-    private val role: String,
     private val onItemClick: (DataItem) -> Unit,
-    private val onEditClick: (DataItem) -> Unit = {}
-) : RecyclerView.Adapter<ListBarang.ListViewHolder>() {
+    private val onEditClick: (DataItem) -> Unit,
+    // fragment akan melakukan update ke KeranjangManager melalui callback ini
+    private val onAddClick: (barangId: Int, jumlah: Int) -> Unit
+) : RecyclerView.Adapter<ListBarang.ViewHolder>() {
 
-    private val items = mutableListOf<DataItem>()
-    private val jumlahKlik = mutableListOf<Int>()
+    private var listBarang: List<DataItem> = emptyList()
 
-    inner class ListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val ivLogo: ImageView = itemView.findViewById(R.id.ivLogo)
-        private val tvName: TextView = itemView.findViewById(R.id.tvName)
-        private val tvStok: TextView? = itemView.findViewById(R.id.tvStok)
-        private val tvKodeBarang: TextView? = itemView.findViewById(R.id.tvKodeBarang)
-        private val tvHarga: TextView? = itemView.findViewById(R.id.tvHarga)
-        private val tvJumlahKlik: TextView? = itemView.findViewById(R.id.tvJumlahKlik)
-        private val btnTambahAwal: ImageButton? = itemView.findViewById(R.id.btnTambahAwal)
-        private val btnTambah: ImageButton? = itemView.findViewById(R.id.btnTambah)
-        private val btnKurang: ImageButton? = itemView.findViewById(R.id.btnKurang)
-        private val layoutCounter: View? = itemView.findViewById(R.id.layoutCounter)
-        private val btnEdit: ImageButton? = itemView.findViewById(R.id.btnEdit)
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val ivLogo: ImageView = itemView.findViewById(R.id.ivLogo)
+        val tvName: TextView = itemView.findViewById(R.id.tvName)
+        val tvKode: TextView = itemView.findViewById(R.id.tvKodeBarang)
+        val tvHarga: TextView = itemView.findViewById(R.id.tvHarga)
+        val tvStok: TextView = itemView.findViewById(R.id.tvStok)
 
-        fun bind(item: DataItem, position: Int) {
-            tvName.text = item.namaBarang ?: "-"
-            tvKodeBarang?.text = item.kodeBarang ?: "-"
-            tvHarga?.text = if (item.hargaJual != null) "Rp${item.hargaJual}" else "-"
+        val btnTambahAwal: ImageButton = itemView.findViewById(R.id.btnTambahAwal)
+        val layoutCounter: View = itemView.findViewById(R.id.layoutCounter)
+        val btnTambah: ImageButton = itemView.findViewById(R.id.btnTambah)
+        val btnKurang: ImageButton = itemView.findViewById(R.id.btnKurang)
+        val tvJumlahKlik: TextView = itemView.findViewById(R.id.tvJumlahKlik)
 
-            val stok = item.stokToko ?: item.stokGudang ?: 0
-            tvStok?.text = "Stok: $stok"
-
-            if (position < jumlahKlik.size) {
-                tvJumlahKlik?.text = jumlahKlik[position].toString()
-            }
-
-            Glide.with(itemView.context)
-                .load(item.imageUrl?.trim())
-                .into(ivLogo)
-
-            btnTambahAwal?.setOnClickListener {
-                btnTambahAwal.visibility = View.GONE
-
-                // FIX: Hilangkan animasi → langsung tampil
-                layoutCounter?.visibility = View.VISIBLE
-                layoutCounter?.alpha = 1f
-
-                jumlahKlik[position] = 1
-                tvJumlahKlik?.text = "1"
-            }
-
-            btnTambah?.setOnClickListener {
-                jumlahKlik[position]++
-                tvJumlahKlik?.text = jumlahKlik[position].toString()
-            }
-
-            btnKurang?.setOnClickListener {
-                if (jumlahKlik[position] > 1) {
-                    jumlahKlik[position]--
-                    tvJumlahKlik?.text = jumlahKlik[position].toString()
-                } else {
-                    // FIX: tidak fade-out lagi
-                    layoutCounter?.visibility = View.GONE
-                    btnTambahAwal?.visibility = View.VISIBLE
-
-                    jumlahKlik[position] = 0
-                    tvJumlahKlik?.text = "0"
-                }
-            }
-
-            itemView.setOnClickListener { onItemClick(item) }
-            btnEdit?.setOnClickListener { onEditClick(item) }
-
-            if (role.lowercase() != "owner" && role.lowercase() != "admin") {
-                btnEdit?.visibility = View.GONE
-            } else {
-                btnEdit?.visibility = View.VISIBLE
-            }
-        }
+        val btnEdit: ImageButton = itemView.findViewById(R.id.btnEdit)
     }
 
-    override fun getItemViewType(position: Int): Int {
-        return when (role.lowercase()) {
-            "owner", "admin" -> 2
-            "gudang" -> 1
-            else -> 0
-        }
-    }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListViewHolder {
-        val layout = when (viewType) {
-            2 -> R.layout.item_barang_admin
-            1 -> R.layout.item_barang_gudang
-            else -> R.layout.item_barang_karyawan
-        }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view =
-            LayoutInflater.from(parent.context).inflate(layout, parent, false)
-        return ListViewHolder(view)
+            LayoutInflater.from(parent.context).inflate(R.layout.item_barang_admin, parent, false)
+        return ViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: ListViewHolder, position: Int) {
-        holder.bind(items[position], position)
+    override fun getItemCount(): Int = listBarang.size
+
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val item = listBarang[position]
+
+        val hargaInt = toHargaInt(item.hargaJual)
+        holder.tvHarga.text = formatRupiah(hargaInt)
+
+        val stokToko = item.stokToko ?: 0
+
+        // SET DATA SESUAI XML
+        holder.tvName.text = item.namaBarang ?: "-"
+        holder.tvKode.text = item.kodeBarang ?: "-"
+        holder.tvStok.text = "Stok: $stokToko"
+
+        Glide.with(holder.itemView.context)
+            .load(item.imageUrl)
+            .into(holder.ivLogo)
+
+        // Klik item → detail barang
+        holder.itemView.setOnClickListener { onItemClick(item) }
+
+        // Klik edit → pindah halaman edit
+        holder.btnEdit.setOnClickListener { onEditClick(item) }
+
+        // ambil jumlah dalam keranjang (selalu baca dari KeranjangManager)
+        val jumlahKeranjang = KeranjangManager.getJumlahForBarang(item.id ?: 0)
+
+        if (jumlahKeranjang > 0) {
+            holder.btnTambahAwal.visibility = View.GONE
+            holder.layoutCounter.visibility = View.VISIBLE
+            holder.tvJumlahKlik.text = jumlahKeranjang.toString()
+        } else {
+            holder.btnTambahAwal.visibility = View.VISIBLE
+            holder.layoutCounter.visibility = View.GONE
+            holder.tvJumlahKlik.text = "0"
+        }
+
+        // --- ACTIONS ---
+        // tambah pertama
+        holder.btnTambahAwal.setOnClickListener {
+            if (stokToko <= 0) {
+                Toast.makeText(holder.itemView.context, "Stok barang tidak cukup", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            // posisi aman
+            val pos = try { holder.adapterPosition } catch (e: Throwable) { holder.adapterPosition }
+            if (pos == RecyclerView.NO_POSITION) return@setOnClickListener
+
+            onAddClick(item.id!!, 1)
+            // UI di adapter akan di-refresh dari fragment (fragment memanggil notifyItemChanged atau notifyDataSetChanged)
+            // tapi untuk safety kita panggil notifyItemChanged juga di sini
+            notifyItemChanged(pos)
+        }
+
+        // tombol +
+        holder.btnTambah.setOnClickListener {
+            val pos = try { holder.adapterPosition } catch (e: Throwable) { holder.adapterPosition }
+            if (pos == RecyclerView.NO_POSITION) return@setOnClickListener
+
+            val now = KeranjangManager.getJumlahForBarang(item.id ?: 0)
+            val next = now + 1
+
+            if (next > stokToko) {
+                Toast.makeText(holder.itemView.context, "Stok barang tidak cukup", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            onAddClick(item.id!!, next)
+            notifyItemChanged(pos)
+        }
+
+        // tombol -
+        holder.btnKurang.setOnClickListener {
+            val pos = try { holder.adapterPosition } catch (e: Throwable) { holder.adapterPosition }
+            if (pos == RecyclerView.NO_POSITION) return@setOnClickListener
+
+            val now = KeranjangManager.getJumlahForBarang(item.id ?: 0)
+
+            if (now > 1) {
+                val prev = now - 1
+                onAddClick(item.id!!, prev)
+            } else {
+                // jika sekarang 1 -> setelah dikurang akan jadi 0 => hapus dari keranjang
+                onAddClick(item.id!!, 0)
+            }
+            notifyItemChanged(pos)
+        }
     }
 
-    override fun getItemCount(): Int = items.size
-
-    fun updateData(newItems: List<DataItem>) {
-        items.clear()
-        items.addAll(newItems)
-
-        jumlahKlik.clear()
-        jumlahKlik.addAll(List(newItems.size) { 0 })
-
+    fun updateData(newList: List<DataItem>) {
+        listBarang = newList
         notifyDataSetChanged()
     }
 }

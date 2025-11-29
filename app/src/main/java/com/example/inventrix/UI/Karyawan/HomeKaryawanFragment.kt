@@ -4,12 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AutoCompleteTextView
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.inventrix.Adapter.ListBarang
+import com.example.inventrix.Adapter.ListBarangKaryawan
 import com.example.inventrix.Model.DataItem
 import com.example.inventrix.Model.TampilBarangRes
 import com.example.inventrix.R
@@ -25,7 +24,7 @@ class HomeKaryawanFragment : Fragment() {
     private var _binding: FragmentHomeKaryawanBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var adapter: ListBarang
+    private lateinit var adapter: ListBarangKaryawan
     private var allBarangList = listOf<DataItem>()
     private var merekTerpilih: String? = null
 
@@ -34,58 +33,49 @@ class HomeKaryawanFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentHomeKaryawanBinding.inflate(inflater, container, false)
-        val root = binding.root
 
         setupRecyclerView()
-        setupSearchBar()
-        setupChipMerek()
+        setupSearch()
+        setupMerek()
         loadBarang()
 
-        return root
+        return binding.root
     }
 
-    /** -------------------------------------
-     *  SETUP RECYCLERVIEW & ITEM CLICK
-     *  ------------------------------------*/
+
     private fun setupRecyclerView() {
-        adapter = ListBarang(
-            role = "karyawan",
-            onItemClick = { item ->
-                val bundle = Bundle().apply { putInt("id", item.id ?: -1) }
-                val detailFragment = com.example.inventrix.UI.DetailFragment()
-                detailFragment.arguments = bundle
+        adapter = ListBarangKaryawan { item ->
+            val bundle = Bundle().apply { putInt("id", item.id!!) }
+            val detail = com.example.inventrix.UI.DetailFragment()
+            detail.arguments = bundle
 
-                requireActivity().supportFragmentManager.beginTransaction()
-                    .setCustomAnimations(R.anim.slide_in_right, R.anim.fade_out, R.anim.fade_in, R.anim.slide_out_right)
-                    .replace(R.id.frame_container, detailFragment)
-                    .addToBackStack(null)
-                    .commit()
-            }
-        )
-
+            requireActivity().supportFragmentManager.beginTransaction()
+                .setCustomAnimations(
+                    R.anim.slide_in_right, R.anim.fade_out,
+                    R.anim.fade_in, R.anim.slide_out_right
+                )
+                .replace(R.id.frame_container, detail)
+                .addToBackStack(null)
+                .commit()
+        }
 
         binding.namaBarangKaryawan.layoutManager = LinearLayoutManager(requireContext())
         binding.namaBarangKaryawan.adapter = adapter
     }
 
-    /** -------------------------------------
-     *  LOAD DATA DARI BACKEND
-     *  ------------------------------------*/
+
     private fun loadBarang() {
         showLoading(true)
 
         ApiClinet.instance.getBarangList().enqueue(object : Callback<TampilBarangRes> {
-            override fun onResponse(
-                call: Call<TampilBarangRes>,
-                response: Response<TampilBarangRes>
-            ) {
+            override fun onResponse(call: Call<TampilBarangRes>, response: Response<TampilBarangRes>) {
                 showLoading(false)
+
                 if (response.isSuccessful && response.body()?.data != null) {
-                    allBarangList = response.body()?.data?.filterNotNull() ?: emptyList()
+                    allBarangList = response.body()!!.data!!.filterNotNull()
                     adapter.updateData(allBarangList)
                 } else {
-                    Toast.makeText(requireContext(), "Gagal memuat data barang", Toast.LENGTH_SHORT)
-                        .show()
+                    Toast.makeText(requireContext(), "Gagal memuat barang", Toast.LENGTH_SHORT).show()
                 }
             }
 
@@ -96,80 +86,61 @@ class HomeKaryawanFragment : Fragment() {
         })
     }
 
-    /** -------------------------------------
-     *  SEARCH BAR
-     *  ------------------------------------*/
-    private fun setupSearchBar() {
-        val searchView = binding.searchViewBarang
-        searchView.queryHint = "Cari barang"
 
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                filterBarang(query)
-                return true
-            }
+    private fun setupSearch() {
+        val search = binding.searchViewBarang
+        search.queryHint = "Cari barang"
 
-            override fun onQueryTextChange(newText: String?): Boolean {
-                filterBarang(newText)
-                return true
-            }
+        search.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(q: String?) = true.also { filter(q) }
+            override fun onQueryTextChange(t: String?) = true.also { filter(t) }
         })
     }
 
-    /** -------------------------------
-     *  FITUR PILIH MEREK (BOTTOM SHEET DARI BACKEND)
-     *  ------------------------------*/
-    private fun setupChipMerek() {
-        val chipMerek = binding.chipSemua
-        chipMerek.setOnClickListener {
-            val bottomSheet = MerekBottomSheet { merek ->
+
+    private fun setupMerek() {
+        binding.chipSemua.setOnClickListener {
+            val sheet = MerekBottomSheet { merek ->
                 merekTerpilih = merek
-                chipMerek.text = merek
-                filterBarang(binding.searchViewBarang.query.toString())
+                binding.chipSemua.text = merek
+                filter(binding.searchViewBarang.query.toString())
             }
-            bottomSheet.show(parentFragmentManager, "MerekBottomSheetKaryawan")
+            sheet.show(parentFragmentManager, "MerekBottomSheetKaryawan")
         }
     }
 
-    /** -------------------------------------
-     *  FILTER DATA (SEARCH + MEREK)
-     *  ------------------------------------*/
-    private fun filterBarang(query: String?) {
-        var filtered = allBarangList
 
-        if (!query.isNullOrEmpty()) {
-            filtered = filtered.filter { item ->
-                val nama = item.namaBarang?.lowercase() ?: ""
-                val kode = item.kodeBarang?.lowercase() ?: ""
-                query.lowercase() in nama || query.lowercase() in kode
+    private fun filter(q: String?) {
+        var result = allBarangList
+
+        if (!q.isNullOrEmpty()) {
+            result = result.filter {
+                it.namaBarang!!.lowercase().contains(q.lowercase()) ||
+                        it.kodeBarang!!.lowercase().contains(q.lowercase())
             }
         }
 
-        merekTerpilih?.let { merek ->
-            filtered = filtered.filter { it.merek?.equals(merek, ignoreCase = true) == true }
+        merekTerpilih?.let {
+            result = result.filter { b -> b.merek == it }
         }
 
-        adapter.updateData(filtered)
+        adapter.updateData(result)
     }
+
+
+    private fun showLoading(show: Boolean) {
+        if (show) {
+            binding.progressBar.visibility = View.VISIBLE
+            binding.namaBarangKaryawan.visibility = View.INVISIBLE
+        } else {
+            binding.progressBar.visibility = View.GONE
+            binding.namaBarangKaryawan.visibility = View.VISIBLE
+        }
+    }
+
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    /** -------------------------------------
-     *  PROGRESSBAR LOADING
-     *  ------------------------------------*/
-    private fun showLoading(isLoading: Boolean) {
-        if (isLoading) {
-            binding.progressBar.animate().alpha(1f).setDuration(200).start()
-            binding.progressBar.visibility = View.VISIBLE
-            binding.namaBarangKaryawan.visibility = View.INVISIBLE
-        } else {
-            binding.progressBar.animate().alpha(0f).setDuration(200).withEndAction {
-                binding.progressBar.visibility = View.GONE
-            }.start()
-            binding.namaBarangKaryawan.visibility = View.VISIBLE
-        }
     }
 }

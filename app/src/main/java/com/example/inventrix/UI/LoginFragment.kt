@@ -77,18 +77,20 @@ class LoginFragment : Fragment() {
 
                     if (loginRes != null && loginRes.token != null) {
 
-                        // SIMPAN TOKEN & ROLE
+                        // SIMPAN TOKEN, ROLE, USER_ID
                         val prefs = requireContext()
                             .getSharedPreferences("APP_PREF", Context.MODE_PRIVATE)
 
                         prefs.edit().apply {
                             putString("TOKEN", loginRes.token)
                             putString("ROLE", loginRes.role)
+                            putLong("USER_ID", loginRes.id?.toLong() ?: 0L)   // <--- FIX UTAMA
                             apply()
                         }
 
                         Log.d("LOGIN_DEBUG", "Token: ${loginRes.token}")
                         Log.d("LOGIN_DEBUG", "Role: ${loginRes.role}")
+                        Log.d("LOGIN_DEBUG", "UserID: ${loginRes.id}")
 
                         Toast.makeText(
                             requireContext(),
@@ -128,6 +130,7 @@ class LoginFragment : Fragment() {
         })
     }
 
+
     // ---------------------------------------------------------------
     // LOGIN TAMU → MASUK SEBAGAI KARYAWAN
     // ---------------------------------------------------------------
@@ -147,8 +150,10 @@ class LoginFragment : Fragment() {
                         prefs.edit().apply {
                             putString("TOKEN", loginRes.token)
                             putString("ROLE", loginRes.role)
+                            putLong("USER_ID", loginRes.id?.toLong() ?: 0L)   // Tamu juga harus punya userId
                             apply()
                         }
+
 
                         Log.d("LOGIN_DEBUG", "TAMU Token: ${loginRes.token}")
                         Log.d("LOGIN_DEBUG", "TAMU Role: ${loginRes.role}")

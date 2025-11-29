@@ -7,39 +7,42 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.inventrix.Model.ReqPermintaanBarang
+import com.example.inventrix.Model.ResListPermintaanItem
 import com.example.inventrix.R
 
-class ListPermintaan(
-    private val onItemClick: (ReqPermintaanBarang) -> Unit
-) : RecyclerView.Adapter<ListPermintaan.ViewHolder>() {
+class ListPermintaanAdapter(
+    private val onItemClick: (ResListPermintaanItem) -> Unit
+) : RecyclerView.Adapter<ListPermintaanAdapter.ViewHolder>() {
 
-    private val items = mutableListOf<ReqPermintaanBarang>()
+    private val items = mutableListOf<ResListPermintaanItem>()
 
-    fun updateData(newList: List<ReqPermintaanBarang>) {
+    fun updateData(newList: List<ResListPermintaanItem>) {
         items.clear()
         items.addAll(newList)
         notifyDataSetChanged()
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
         private val ivLogo: ImageView = itemView.findViewById(R.id.ivLogo)
         private val tvName: TextView = itemView.findViewById(R.id.tvName)
         private val tvKodeBarang: TextView = itemView.findViewById(R.id.tvKodeBarang)
         private val tvHarga: TextView = itemView.findViewById(R.id.tvHarga)
         private val tvStok: TextView = itemView.findViewById(R.id.tvStok)
 
-        fun bind(item: ReqPermintaanBarang) {
-            tvName.text = item.nama
-            tvKodeBarang.text = "${item.kodeBarang}"
-            tvHarga.text = "${item.merek}"
-            tvStok.text = "Jumlah Permintaan: ${item.Stok}"
+        fun bind(item: ResListPermintaanItem) {
+
+            val barang = item.barang
+
+            tvName.text = barang?.namaBarang ?: "-"
+            tvKodeBarang.text = barang?.kodeBarang ?: "-"
+            tvHarga.text = barang?.merek?.namaMerek ?: "-"
+            tvStok.text = "Jumlah permintaan : ${item.jumlah}"
 
             Glide.with(itemView.context)
-                .load(item.imageUrl ?: R.drawable.ic_launcher_background)
+                .load("http://192.168.1.6:8080" + (barang?.imageUrl ?: ""))
                 .into(ivLogo)
 
-            // panggil callback ke fragment
             itemView.setOnClickListener { onItemClick(item) }
         }
     }
@@ -56,3 +59,4 @@ class ListPermintaan(
 
     override fun getItemCount(): Int = items.size
 }
+

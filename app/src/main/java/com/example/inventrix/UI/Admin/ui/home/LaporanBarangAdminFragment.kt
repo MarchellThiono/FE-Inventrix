@@ -1,60 +1,141 @@
 package com.example.inventrix.UI.Admin.ui.home
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.example.inventrix.R
+import android.widget.Toast
+import androidx.fragment.app.Fragment
+import com.example.inventrix.databinding.FragmentLaporanBarangAdminBinding
+import com.example.inventrix.Model.*
+import com.example.inventrix.Server.ApiClinet
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import java.text.SimpleDateFormat
+import java.util.*
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [LaporanBarangAdminFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class LaporanBarangAdminFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private var _binding: FragmentLaporanBarangAdminBinding? = null
+    private val binding get() = _binding!!
+
+    private var barangId = -1
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_laporan_barang_admin, container, false)
+    ): View {
+        _binding = FragmentLaporanBarangAdminBinding.inflate(inflater, container, false)
+
+        ambilIdBarang()
+        setTanggal()
+        loadDetailBarang()
+        setupListeners()
+
+        return binding.root
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment LaporanBarangAdminFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            LaporanBarangAdminFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+    private fun ambilIdBarang() {
+        barangId = arguments?.getInt("idBarang") ?: -1
+        if (barangId == -1) {
+            Toast.makeText(requireContext(), "ID barang tidak ditemukan", Toast.LENGTH_SHORT).show()
+            requireActivity().onBackPressedDispatcher.onBackPressed()
+        }
+    }
+
+    private fun setTanggal() {
+        val sdf = SimpleDateFormat("dd MMMM yyyy", Locale("id", "ID"))
+        val tanggal = sdf.format(Date())
+        binding.rvTanggal.text = "Tanggal : $tanggal"
+    }
+
+    private fun loadDetailBarang() {
+        ApiClinet.instance.getDetailBarang(barangId)
+            .enqueue(object : Callback<ResEditBarang> {
+                override fun onResponse(call: Call<ResEditBarang>, response: Response<ResEditBarang>) {
+                    if (response.isSuccessful && response.body()?.data != null) {
+                        val data = response.body()!!.data!!
+                        binding.KodeBarang.text = "Kode Barang : ${data.kodeBarang}"
+                        binding.NameBarang.text = "Nama Barang : ${data.namaBarang}"
+                        binding.tvMerek.text = "Merek : ${data.merek}"
+                        binding.tvLokasi.text = "Lokasi : Toko"
+                    } else {
+                        Toast.makeText(requireContext(), "Gagal memuat data barang", Toast.LENGTH_SHORT).show()
+                    }
                 }
+
+                override fun onFailure(call: Call<ResEditBarang>, t: Throwable) {
+                    Toast.makeText(requireContext(), t.message, Toast.LENGTH_SHORT).show()
+                }
+            })
+    }
+
+    private fun setupListeners() {
+        binding.menuBack.setOnClickListener {
+            requireActivity().onBackPressedDispatcher.onBackPressed()
+        }
+
+        binding.rvKirim.setOnClickListener {
+            kirimLaporan()
+        }
+    }
+
+    private fun kirimLaporan() {
+        val jenis = when {
+            binding.rbBarangHilang.isChecked -> "HILANG"
+            binding.rbBarangRusak.isChecked -> "RUSAK"
+            else -> {
+                Toast.makeText(requireContext(), "Pilih jenis laporan!", Toast.LENGTH_SHORT).show()
+                return
             }
+        }
+
+        val jumlahText = binding.jumlahbarang.text.toString().trim()
+
+        if (jumlahText.isEmpty()) {
+            Toast.makeText(requireContext(), "Isi jumlah barang!", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val jumlah = jumlahText.toIntOrNull()
+        if (jumlah == null || jumlah <= 0) {
+            Toast.makeText(requireContext(), "Jumlah tidak valid!", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+
+        val item = ReqLaporanItem(
+            barangId = barangId,
+            jumlah = jumlah,
+            keterangan = "Laporan dari Admin"
+        )
+
+        val body = ReqCreateLaporan(
+            jenis = jenis,
+            supplier = null,
+            items = listOf(item)
+        )
+
+        ApiClinet.instance.createLaporan(body)
+            .enqueue(object : Callback<ResPesan> {
+                override fun onResponse(call: Call<ResPesan>, response: Response<ResPesan>) {
+                    if (response.isSuccessful) {
+                        Toast.makeText(requireContext(), response.body()?.pesan ?: "Berhasil", Toast.LENGTH_LONG).show()
+                        requireActivity().onBackPressedDispatcher.onBackPressed()
+                    } else {
+                        Toast.makeText(requireContext(), "Gagal membuat laporan", Toast.LENGTH_LONG).show()
+                    }
+                }
+
+                override fun onFailure(call: Call<ResPesan>, t: Throwable) {
+                    Toast.makeText(requireContext(), t.message, Toast.LENGTH_SHORT).show()
+                }
+            })
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

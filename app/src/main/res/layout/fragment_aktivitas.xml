@@ -68,7 +68,7 @@
 
     <!-- Tombol chip Diminta -->
     <TextView
-        android:id="@+id/diminta"
+        android:id="@+id/diproses"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
@@ -78,7 +78,7 @@
         android:paddingTop="8dp"
         android:paddingRight="16dp"
         android:paddingBottom="8dp"
-        android:text="Diminta"
+        android:text="Diproses"
         android:textColor="@android:color/black"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/garis_bawah_chip" />
@@ -96,8 +96,8 @@
         android:paddingBottom="8dp"
         android:text="Dikirim"
         android:textColor="@android:color/black"
-        app:layout_constraintStart_toEndOf="@id/diminta"
-        app:layout_constraintTop_toTopOf="@id/diminta" />
+        app:layout_constraintStart_toEndOf="@id/diproses"
+        app:layout_constraintTop_toTopOf="@id/diproses" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvPermintaan"

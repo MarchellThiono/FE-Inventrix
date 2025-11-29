@@ -14,7 +14,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingBottom="80dp">
 
             <!-- Bagian header -->
             <LinearLayout
@@ -90,7 +91,7 @@
                 android:scaleType="centerCrop" />
 
             <TextView
-                android:id="@+id/Kode_barang"
+                android:id="@+id/kode_barang"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="15sp"
@@ -99,7 +100,7 @@
                 android:text="Kode barang :" />
 
             <TextView
-                android:id="@+id/Name_barang"
+                android:id="@+id/name_barang"
                 android:layout_marginStart="30dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -118,22 +119,24 @@
 
 
             <TextView
-                android:id="@+id/tvHarga_Beli"
+                android:id="@+id/tvHargaBeli"
                 android:layout_marginStart="30dp"
                 android:paddingTop="8dp"
                 android:layout_width="match_parent"
-                android:textSize="15sp"
                 android:layout_height="wrap_content"
+                android:textSize="15sp"
                 android:text="Harga Beli :" />
 
             <TextView
-                android:id="@+id/tvHarga_Jual"
+                android:id="@+id/tvHargaJual"
                 android:layout_marginStart="30dp"
                 android:paddingTop="8dp"
                 android:layout_width="match_parent"
-                android:textSize="15sp"
                 android:layout_height="wrap_content"
+                android:textSize="15sp"
                 android:text="Harga Jual :" />
+
+
 
             <TextView
                 android:id="@+id/text"
@@ -173,8 +176,8 @@
                     android:textStyle="normal"
                     android:hint="Deskripsi barang"
                     android:inputType="textMultiLine" />
-
             </LinearLayout>
+
             <TextView
                 android:id="@+id/tvStok_toko"
                 android:layout_marginStart="30dp"

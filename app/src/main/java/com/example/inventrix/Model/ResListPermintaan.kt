@@ -2,25 +2,43 @@ package com.example.inventrix.Model
 
 import com.google.gson.annotations.SerializedName
 
-data class ResEditBarang(
+data class ResListPermintaanItem(
 
-	@field:SerializedName("pesan")
-	val pesan: String? = null,
+	@field:SerializedName("barang")
+	val barang: Barang? = null,
 
-	@field:SerializedName("data")
-	val data: EditData? = null
-)
+	@field:SerializedName("createdAt")
+	val createdAt: String? = null,
 
-data class Merek(
+	@field:SerializedName("keterangan")
+	val keterangan: String? = null,
 
-	@field:SerializedName("namaMerek")
-	val namaMerek: String? = null,
+	@field:SerializedName("completedAt")
+	val completedAt: Any? = null,
+
+	@field:SerializedName("jumlah")
+	val jumlah: Int? = null,
+
+	@field:SerializedName("createdBy")
+	val createdBy: String? = null,
+
+	@field:SerializedName("processedAt")
+	val processedAt: Any? = null,
 
 	@field:SerializedName("id")
-	val id: Int? = null
+	val id: Int? = null,
+
+	@field:SerializedName("processedBy")
+	val processedBy: Any? = null,
+
+	@field:SerializedName("completedBy")
+	val completedBy: Any? = null,
+
+	@field:SerializedName("status")
+	val status: String? = null
 )
 
-data class EditData(
+data class Barang(
 
 	@field:SerializedName("stokToko")
 	val stokToko: Int? = null,
@@ -46,17 +64,16 @@ data class EditData(
 	@field:SerializedName("namaBarang")
 	val namaBarang: String? = null,
 
-	// backend mengirim string, bukan double
 	@field:SerializedName("hargaJual")
-	val hargaJual: String? = null,
+	val hargaJual: Any? = null,
 
 	@field:SerializedName("deskripsi")
 	val deskripsi: String? = null,
 
-	// backend mengirim string, bukan double
 	@field:SerializedName("hargaBeli")
-	val hargaBeli: String? = null,
+	val hargaBeli: Any? = null,
 
 	@field:SerializedName("merek")
-	val merek: String? = null
+	val merek: Merek? = null   // PAKAI class Merek yang sudah ada!
 )
+

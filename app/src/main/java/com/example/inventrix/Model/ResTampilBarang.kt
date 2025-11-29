@@ -41,7 +41,7 @@ data class DataItem(
 	val namaBarang: String? = null,
 
 	@field:SerializedName("hargaJual")
-	val hargaJual: Any? = null,
+	val hargaJual: String? = null,     // <— FIX INI PENTING
 
 	@field:SerializedName("merek")
 	val merek: String? = null
