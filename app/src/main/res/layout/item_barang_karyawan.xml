@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
+    android:background="@drawable/bg_card_stroke"
     app:cardCornerRadius="12dp"
     app:cardElevation="6dp">
 
@@ -11,6 +12,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:padding="8dp">
+
 
         <ImageView
             android:id="@+id/ivLogo"

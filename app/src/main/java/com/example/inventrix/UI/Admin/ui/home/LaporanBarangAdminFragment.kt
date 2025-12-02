@@ -58,7 +58,7 @@ class LaporanBarangAdminFragment : Fragment() {
                         val data = response.body()!!.data!!
                         binding.KodeBarang.text = "Kode Barang : ${data.kodeBarang}"
                         binding.NameBarang.text = "Nama Barang : ${data.namaBarang}"
-                        binding.tvMerek.text = "Merek : ${data.merek}"
+                        binding.tvMerek.text = "Merek : ${data.merek?.namaMerek}"
                         binding.tvLokasi.text = "Lokasi : Toko"
                     } else {
                         Toast.makeText(requireContext(), "Gagal memuat data barang", Toast.LENGTH_SHORT).show()

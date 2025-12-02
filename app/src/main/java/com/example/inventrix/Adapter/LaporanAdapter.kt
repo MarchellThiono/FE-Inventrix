@@ -1,33 +1,51 @@
 package com.example.inventrix.UI.Admin.ui.riwayat
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.inventrix.R
 import com.example.inventrix.Model.ContentItem
 import com.example.inventrix.databinding.ItemLaporanBinding
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+
+// ==========================
+// FUNGSI FORMAT TANGGAL
+// ==========================
+fun formatTanggal(raw: String?): String {
+    if (raw.isNullOrBlank()) return "-"
+    return try {
+        val date = LocalDateTime.parse(raw, DateTimeFormatter.ISO_DATE_TIME)
+        date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"))
+    } catch (e: Exception) {
+        raw
+    }
+}
 
 class LaporanAdapter(
     private var list: ArrayList<ContentItem>,
     private val onItemClick: (ContentItem) -> Unit
 ) : RecyclerView.Adapter<LaporanAdapter.ViewHolder>() {
 
-    inner class ViewHolder(val binding: ItemLaporanBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class ViewHolder(val binding: ItemLaporanBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+
         fun bind(data: ContentItem) {
             binding.txtJenis.text = data.jenis
-            binding.txtTanggal.text = data.tanggal
+            binding.txtTanggal.text = formatTanggal(data.tanggal)
             binding.txtTotalItem.text = "${data.totalItem} item"
 
             binding.root.setOnClickListener {
-                onItemClick(data)   // 🔥 KLIK!
+                onItemClick(data)
             }
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = ItemLaporanBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = ItemLaporanBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
         return ViewHolder(binding)
     }
 

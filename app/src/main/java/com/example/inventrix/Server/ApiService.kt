@@ -56,24 +56,24 @@ interface ApiService {
     @GET("barang/list")
     fun getBarangList(): Call<TampilBarangRes>
 
-    // DETAIL barang (untuk DetailFragment & Edit)
+    // DETAIL barang (Edit)
     @GET("barang/detail/{id}")
     fun getDetailBarang(
         @Path("id") id: Int
     ): Call<ResEditBarang>
 
-    // Edit barang / update
+    // UPDATE BARANG (EDIT)
     @Multipart
     @PUT("barang/edit/{id}")
-    fun updateBarang(
+    fun editBarang(
         @Path("id") id: Int,
-        @Part("kodeBarang") kode: RequestBody,
-        @Part("namaBarang") nama: RequestBody,
+        @Part("kodeBarang") kodeBarang: RequestBody,
+        @Part("namaBarang") namaBarang: RequestBody,
         @Part("merekId") merekId: RequestBody,
         @Part("hargaBeli") hargaBeli: RequestBody,
         @Part("hargaJual") hargaJual: RequestBody,
         @Part("deskripsi") deskripsi: RequestBody,
-        @Part image: MultipartBody.Part? = null
+        @Part image: MultipartBody.Part?
     ): Call<ResEditBarang>
 
     @POST("transaksi/keluar")
@@ -185,7 +185,5 @@ interface ApiService {
     fun deleteNotifikasi(
         @Path("id") id: Long
     ): Call<ResPesan>
-
-
 
 }

@@ -94,7 +94,7 @@ class RiwayatFragment : Fragment() {
             "MASUK",
             "RUSAK",
             "HILANG",
-            "MUTASI_TOKO",
+            "MUTASI TOKO",
             "KELUAR"
         )
 

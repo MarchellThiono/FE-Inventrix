@@ -11,7 +11,7 @@
         android:id="@+id/gambar_logo"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:src="@drawable/person"
+        android:src="@drawable/logo"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginStart="20dp"

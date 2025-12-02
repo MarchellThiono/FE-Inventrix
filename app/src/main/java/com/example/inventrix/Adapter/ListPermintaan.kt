@@ -40,7 +40,7 @@ class ListPermintaanAdapter(
             tvStok.text = "Jumlah permintaan : ${item.jumlah}"
 
             Glide.with(itemView.context)
-                .load("http://192.168.1.6:8080" + (barang?.imageUrl ?: ""))
+                .load("http://192.168.1.4:8080" + (barang?.imageUrl ?: ""))
                 .into(ivLogo)
 
             itemView.setOnClickListener { onItemClick(item) }

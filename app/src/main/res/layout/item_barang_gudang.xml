@@ -80,7 +80,7 @@
             android:id="@+id/btnTambahAwal"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:background="@drawable/bg_counter"
+            android:background="@drawable/bg_counter1"
             android:src="@drawable/baseline_add_circle_outline_24"
             android:contentDescription="@string/tambah_stok"
             app:layout_constraintBottom_toBottomOf="parent"

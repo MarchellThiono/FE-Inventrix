@@ -15,15 +15,16 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:layout_marginTop="10dp"
-            android:gravity="center_vertical">
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
             <ImageView
                 android:id="@+id/gambar_logo"
                 android:layout_width="50dp"
+                android:layout_marginStart="20dp"
                 android:layout_height="50dp"
-                android:src="@drawable/person" />
+                android:src="@drawable/logo" />
 
             <TextView
                 android:id="@+id/nama_sekolah"
@@ -31,9 +32,10 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/lokasi"
+                android:layout_marginStart="12dp"
+                android:textColor="@color/biru"
                 android:textSize="18sp"
-                android:textStyle="bold"
-                android:textColor="@color/biru" />
+                android:textStyle="bold" />
         </LinearLayout>
 
         <View
@@ -47,27 +49,27 @@
             android:id="@+id/searchViewBarang"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:queryHint="Masukkan nama barang"
-            android:iconifiedByDefault="false"
             android:layout_margin="20dp"
             android:background="@drawable/search_bg"
             android:elevation="4dp"
-            android:padding="5dp" />
+            android:iconifiedByDefault="false"
+            android:padding="5dp"
+            android:queryHint="Masukkan nama barang" />
 
         <!-- Filter chip -->
         <TextView
             android:id="@+id/chipSemua"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Merek"
-            android:background="@drawable/bg_chip"
-            android:textColor="@android:color/black"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
             android:layout_marginStart="26dp"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/bg_chip"
+            android:paddingLeft="16dp"
             android:paddingTop="8dp"
+            android:paddingRight="16dp"
             android:paddingBottom="8dp"
-            android:layout_marginEnd="8dp" />
+            android:text="Merek"
+            android:textColor="@android:color/black" />
 
         <View
             android:layout_width="match_parent"
@@ -92,13 +94,13 @@
                     android:id="@+id/tv_empty_state"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Belum ada barang yang tersedia."
-                    android:gravity="center"
-                    android:visibility="gone"
-                    android:textSize="16sp"
-                    android:textColor="@color/biru"
                     android:layout_marginTop="40dp"
-                    android:layout_marginBottom="10dp" />
+                    android:layout_marginBottom="10dp"
+                    android:gravity="center"
+                    android:text="Belum ada barang yang tersedia."
+                    android:textColor="@color/biru"
+                    android:textSize="16sp"
+                    android:visibility="gone" />
 
                 <!-- RecyclerView -->
                 <androidx.recyclerview.widget.RecyclerView

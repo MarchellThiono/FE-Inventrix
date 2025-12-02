@@ -11,10 +11,11 @@ import com.example.inventrix.Model.BarangLaporanResult
 import com.example.inventrix.R
 
 class ListLaporanBarang(
-    private val listBarang: List<BarangDipilihGudang>
+    private val listBarang: List<BarangDipilihGudang>,
+    private val onJumlahEdit: (barangId: Int, jumlahBaru: Int) -> Unit
 ) : RecyclerView.Adapter<ListLaporanBarang.ViewHolder>() {
 
-    val jumlahMap = HashMap<Int, Int>()
+    private val jumlahMap = HashMap<Int, Int>()
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val namaBarang: TextView = view.findViewById(R.id.tvNamaBarang)
@@ -22,23 +23,28 @@ class ListLaporanBarang(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context)
+        val v = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_barang_laporan, parent, false)
-        return ViewHolder(view)
+        return ViewHolder(v)
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val barang = listBarang[position]
+    override fun onBindViewHolder(holder: ViewHolder, pos: Int) {
+        val barang = listBarang[pos]
 
         holder.namaBarang.text = "${barang.nama} (${barang.kodeBarang})"
 
-        // jumlah default = stokGudang yang dikirim dari HomeGudang
+        // default jumlah
         holder.etJumlah.setText(barang.stokGudang.toString())
         jumlahMap[barang.barangId] = barang.stokGudang
 
         holder.etJumlah.setOnKeyListener { _, _, _ ->
             val jumlahInput = holder.etJumlah.text.toString().toIntOrNull() ?: 0
+
             jumlahMap[barang.barangId] = jumlahInput
+
+            // UPDATE HOME VIEWMODEL
+            onJumlahEdit(barang.barangId, jumlahInput)
+
             false
         }
     }
@@ -46,11 +52,8 @@ class ListLaporanBarang(
     override fun getItemCount(): Int = listBarang.size
 
     fun getListJumlah(): List<BarangLaporanResult> {
-        return jumlahMap.map { (id, jumlah) ->
-            BarangLaporanResult(
-                barangId = id,
-                jumlah = jumlah
-            )
+        return jumlahMap.map { (id, jml) ->
+            BarangLaporanResult(id, jml)
         }
     }
 }

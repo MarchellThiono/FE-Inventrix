@@ -7,7 +7,7 @@
     android:fillViewport="true"
     android:isScrollContainer="true"
     android:scrollbars="vertical"
-    tools:context=".UI.Admin.ui.home.TamabahBarangFragment">
+    tools:context=".UI.Admin.ui.home.TambahBarangFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -27,7 +27,7 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_marginStart="20dp"
-                android:src="@drawable/person" />
+                android:src="@drawable/logo" />
 
             <TextView
                 android:id="@+id/nama_sekolah"

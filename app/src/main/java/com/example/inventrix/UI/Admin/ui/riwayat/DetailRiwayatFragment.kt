@@ -85,13 +85,23 @@ class DetailRiwayatFragment : Fragment() {
         // Format tanggal & waktu
         // =======================
         val tanggalFull = data.tanggal ?: ""
+
+        // Pisah "2025-12-01T10:12:34.123456Z"
         val split = tanggalFull.split("T")
 
         val tanggal = split.getOrNull(0) ?: "-"
-        val waktu = split.getOrNull(1) ?: "-"
+        var waktu = split.getOrNull(1) ?: "-"
 
+        // Buang microsecond → "10:12:34"
+        waktu = waktu.split(".").getOrNull(0) ?: waktu
+
+        // Buang huruf Z di akhir kalau ada
+        waktu = waktu.replace("Z", "")
+
+        // Set ke UI
         binding.tgl.text = tanggal
-        binding.waktu.text = waktu
+        binding.tvwaktu.text = waktu.trim()
+
 
         // =======================
         // Header Total & Jenis

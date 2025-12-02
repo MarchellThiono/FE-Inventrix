@@ -4,42 +4,50 @@ import com.google.gson.annotations.SerializedName
 
 data class ResTampilDetail(
 
-	@field:SerializedName("pesan")
+	@SerializedName("pesan")
 	val pesan: String? = null,
 
-	@field:SerializedName("data")
+	@SerializedName("data")
 	val data: DetailData? = null
 )
 
 data class DetailData(
 
-	@field:SerializedName("stokToko")
-	val stokToko: Int? = null,
-
-	@field:SerializedName("stokGudang")
-	val stokGudang: Int? = null,
-
-	@field:SerializedName("imageUrl")
-	val imageUrl: String? = null,
-
-	@field:SerializedName("kodeBarang")
-	val kodeBarang: String? = null,
-
-	@field:SerializedName("id")
+	@SerializedName("id")
 	val id: Int? = null,
 
-	@field:SerializedName("namaBarang")
+	@SerializedName("kodeBarang")
+	val kodeBarang: String? = null,
+
+	@SerializedName("namaBarang")
 	val namaBarang: String? = null,
 
-	@field:SerializedName("hargaJual")
-	val hargaJual: Any? = null,
+	@SerializedName("merek")
+	val merek: String? = null,
 
-	@field:SerializedName("deskripsi")
-	val deskripsi: String? = null,
+	@SerializedName("imageUrl")
+	val imageUrl: String? = null,
 
-	@field:SerializedName("hargaBeli")
-	val hargaBeli: Any? = null,
+	// Harga asli dari BE (Double)
+	@SerializedName("hargaBeli")
+	val hargaBeli: Double? = null,
 
-	@field:SerializedName("merek")
-	val merek: String? = null
+	@SerializedName("hargaJual")
+	val hargaJual: Double? = null,
+
+	// Harga formatted (string)
+	@SerializedName("hargaBeliFormatted")
+	val hargaBeliFormatted: String? = null,
+
+	@SerializedName("hargaJualFormatted")
+	val hargaJualFormatted: String? = null,
+
+	@SerializedName("stokToko")
+	val stokToko: Int? = null,
+
+	@SerializedName("stokGudang")
+	val stokGudang: Int? = null,
+
+	@SerializedName("deskripsi")
+	val deskripsi: String? = null
 )

@@ -9,34 +9,58 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.inventrix.Adapter.ListPemberitahuan
+import androidx.navigation.fragment.findNavController
 import com.example.inventrix.Adapter.ListPeringatan
 import com.example.inventrix.Model.Notifikasi
-import com.example.inventrix.Server.ApiClinet
 import com.example.inventrix.R
+import com.example.inventrix.Server.ApiClinet
+import com.example.inventrix.databinding.FragmentNotifikasiBinding
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 class NotifikasiFragment : Fragment() {
 
+    private var _binding: FragmentNotifikasiBinding? = null
+    private val binding get() = _binding!!
+
+    private lateinit var peringatanAdapter: ListPeringatan
+    private lateinit var pemberitahuanAdapter: ListPemberitahuan
+
+    private val listPeringatanData = mutableListOf<Notifikasi>()
+    private val listPemberitahuanData = mutableListOf<Notifikasi>()
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        val view = inflater.inflate(R.layout.fragment_notifikasi, container, false)
-
-        val rvPeringatan = view.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.rvPeringatan)
-        val rvPemberitahuan = view.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.rvPemberitahuan)
-
-        loadNotifikasi(rvPeringatan, rvPemberitahuan)
-
-        return view
+    ): View {
+        _binding = FragmentNotifikasiBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
-    private fun loadNotifikasi(
-        rvPeringatan: androidx.recyclerview.widget.RecyclerView,
-        rvPemberitahuan: androidx.recyclerview.widget.RecyclerView
-    ) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+        binding.rvPeringatan.layoutManager = LinearLayoutManager(requireContext())
+        binding.rvPemberitahuan.layoutManager = LinearLayoutManager(requireContext())
+
+        peringatanAdapter = ListPeringatan(listPeringatanData) { notif ->
+            confirmDelete(notif)
+        }
+        pemberitahuanAdapter = ListPemberitahuan(listPemberitahuanData) { notif ->
+            confirmDelete(notif)
+        }
+
+        binding.rvPeringatan.adapter = peringatanAdapter
+        binding.rvPemberitahuan.adapter = pemberitahuanAdapter
+
+        loadData()
+        binding.btnback.setOnClickListener {
+            findNavController().navigate(R.id.action_notifikasiFragment_to_navigation_home)
+        }
+    }
+
+    private fun loadData() {
+
         val prefs = requireContext().getSharedPreferences("APP_PREF", android.content.Context.MODE_PRIVATE)
         val userId = prefs.getLong("USER_ID", 0)
 
@@ -45,30 +69,27 @@ class NotifikasiFragment : Fragment() {
             return
         }
 
-        ApiClinet.instance.getNotifikasi(userId).enqueue(object : Callback<List<Notifikasi>> {
-            override fun onResponse(call: Call<List<Notifikasi>>, response: Response<List<Notifikasi>>) {
-                if (!response.isSuccessful) return
+        ApiClinet.instance.getNotifikasi(userId)
+            .enqueue(object : Callback<List<Notifikasi>> {
+                override fun onResponse(call: Call<List<Notifikasi>>, response: Response<List<Notifikasi>>) {
+                    if (!response.isSuccessful) return
 
-                val data = response.body() ?: emptyList()
+                    val data = response.body() ?: emptyList()
 
-                val peringatan = data.filter { it.tipe == "STOK_MINIM" }
-                val info = data.filter { it.tipe != "STOK_MINIM" }
+                    listPeringatanData.clear()
+                    listPemberitahuanData.clear()
 
-                rvPeringatan.layoutManager = LinearLayoutManager(requireContext())
-                rvPeringatan.adapter = ListPeringatan(peringatan) { notif ->
-                    confirmDelete(notif)
+                    listPeringatanData.addAll(data.filter { it.tipe == "STOK_MINIM" })
+                    listPemberitahuanData.addAll(data.filter { it.tipe != "STOK_MINIM" })
+
+                    peringatanAdapter.notifyDataSetChanged()
+                    pemberitahuanAdapter.notifyDataSetChanged()
                 }
 
-                rvPemberitahuan.layoutManager = LinearLayoutManager(requireContext())
-                rvPemberitahuan.adapter = ListPemberitahuan(info) { notif ->
-                    confirmDelete(notif)
+                override fun onFailure(call: Call<List<Notifikasi>>, t: Throwable) {
+                    Toast.makeText(requireContext(), "Error: ${t.message}", Toast.LENGTH_SHORT).show()
                 }
-            }
-
-            override fun onFailure(call: Call<List<Notifikasi>>, t: Throwable) {
-                Toast.makeText(requireContext(), "Error: ${t.message}", Toast.LENGTH_SHORT).show()
-            }
-        })
+            })
     }
 
     private fun confirmDelete(notif: Notifikasi) {
@@ -76,22 +97,37 @@ class NotifikasiFragment : Fragment() {
             .setTitle("Hapus Notifikasi")
             .setMessage("Apakah Anda yakin ingin menghapus notifikasi ini?")
             .setPositiveButton("Hapus") { _, _ ->
-                deleteNotif(notif.id)
+                deleteNotif(notif)
             }
             .setNegativeButton("Batal", null)
             .show()
     }
 
-    private fun deleteNotif(id: Long) {
-        ApiClinet.instance.deleteNotifikasi(id).enqueue(object : Callback<com.example.inventrix.Model.ResPesan> {
-            override fun onResponse(call: Call<com.example.inventrix.Model.ResPesan>, response: Response<com.example.inventrix.Model.ResPesan>) {
-                Toast.makeText(requireContext(), "Berhasil dihapus", Toast.LENGTH_SHORT).show()
-                requireActivity().recreate()
-            }
+    private fun deleteNotif(notif: Notifikasi) {
+        ApiClinet.instance.deleteNotifikasi(notif.id)
+            .enqueue(object : Callback<com.example.inventrix.Model.ResPesan> {
 
-            override fun onFailure(call: Call<com.example.inventrix.Model.ResPesan>, t: Throwable) {
-                Toast.makeText(requireContext(), "Gagal menghapus", Toast.LENGTH_SHORT).show()
-            }
-        })
+                override fun onResponse(
+                    call: Call<com.example.inventrix.Model.ResPesan>,
+                    response: Response<com.example.inventrix.Model.ResPesan>
+                ) {
+                    Toast.makeText(requireContext(), "Berhasil dihapus", Toast.LENGTH_SHORT).show()
+
+                    if (notif.tipe == "STOK_MINIM") {
+                        peringatanAdapter.removeItem(notif)
+                    } else {
+                        pemberitahuanAdapter.removeItem(notif)
+                    }
+                }
+
+                override fun onFailure(call: Call<com.example.inventrix.Model.ResPesan>, t: Throwable) {
+                    Toast.makeText(requireContext(), "Gagal menghapus", Toast.LENGTH_SHORT).show()
+                }
+            })
+    }
+
+    override fun onDestroyView() {
+        _binding = null
+        super.onDestroyView()
     }
 }

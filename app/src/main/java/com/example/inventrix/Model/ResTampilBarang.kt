@@ -4,45 +4,46 @@ import com.google.gson.annotations.SerializedName
 
 data class TampilBarangRes(
 
-	@field:SerializedName("pesan")
+	@SerializedName("pesan")
 	val pesan: String? = null,
 
-	@field:SerializedName("totalItems")
+	@SerializedName("totalItems")
 	val totalItems: Int? = null,
 
-	@field:SerializedName("data")
+	@SerializedName("data")
 	val data: List<DataItem?>? = null,
 
-	@field:SerializedName("totalPages")
+	@SerializedName("totalPages")
 	val totalPages: Int? = null,
 
-	@field:SerializedName("currentPage")
+	@SerializedName("currentPage")
 	val currentPage: Int? = null
 )
 
 data class DataItem(
 
-	@field:SerializedName("stokToko")
-	val stokToko: Int? = null,
-
-	@field:SerializedName("stokGudang")
-	val stokGudang: Int? = null,
-
-	@field:SerializedName("imageUrl")
-	val imageUrl: String? = null,
-
-	@field:SerializedName("kodeBarang")
-	val kodeBarang: String? = null,
-
-	@field:SerializedName("id")
+	@SerializedName("id")
 	val id: Int? = null,
 
-	@field:SerializedName("namaBarang")
+	@SerializedName("kodeBarang")
+	val kodeBarang: String? = null,
+
+	@SerializedName("namaBarang")
 	val namaBarang: String? = null,
 
-	@field:SerializedName("hargaJual")
-	val hargaJual: String? = null,     // <— FIX INI PENTING
+	@SerializedName("merek")
+	val merek: String? = null,
 
-	@field:SerializedName("merek")
-	val merek: String? = null
+	@SerializedName("imageUrl")
+	val imageUrl: String? = null,
+
+	// BE kirim Double, bukan String
+	@SerializedName("hargaJual")
+	val hargaJual: Double? = null,
+
+	@SerializedName("stokToko")
+	val stokToko: Int? = null,
+
+	@SerializedName("stokGudang")
+	val stokGudang: Int? = null
 )

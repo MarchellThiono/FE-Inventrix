@@ -94,7 +94,7 @@ class DetailFragment : Fragment() {
                 // Data dasar
                 tvNamaBarang.text = "Nama Barang : ${data.namaBarang ?: "-"}"
                 tvKodeBarang.text = "Kode Barang : ${data.kodeBarang ?: "-"}"
-                tvMerek.text = "Merek : ${data.merek ?: "-"}"
+                tvMerek.text = "Merek : ${data.merek?.namaMerek}"
 
                 // Role-based UI
                 if (r == "gudang" || r == "warehouse" || r == "role_gudang") {

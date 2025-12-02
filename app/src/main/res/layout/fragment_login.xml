@@ -21,7 +21,7 @@
 
         <ImageView
             android:id="@+id/gambar_logo"
-            android:src="@drawable/person"
+            android:src="@drawable/logo"
             android:layout_width="50dp"
             android:layout_height="50dp" />
 

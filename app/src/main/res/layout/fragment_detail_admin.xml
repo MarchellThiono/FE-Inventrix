@@ -30,7 +30,7 @@
                     android:id="@+id/gambar_logo"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:src="@drawable/person" />
+                    android:src="@drawable/logo" />
 
                 <TextView
                     android:id="@+id/nama_sekolah"
@@ -39,6 +39,7 @@
                     android:layout_weight="1"
                     android:text="@string/lokasi"
                     android:textSize="18sp"
+                    android:layout_marginStart="12dp"
                     android:textStyle="bold"
                     android:textColor="@color/biru" />
             </LinearLayout>
@@ -76,6 +77,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Hapus Barang"
+                android:textColor="@color/biru"
                 android:layout_marginStart="10dp"
                 android:textSize="15sp"/>
 
@@ -97,12 +99,14 @@
                 android:textSize="15sp"
                 android:paddingTop="8dp"
                 android:layout_marginStart="30dp"
+                android:textColor="@color/biru"
                 android:text="Kode barang :" />
 
             <TextView
                 android:id="@+id/name_barang"
                 android:layout_marginStart="30dp"
                 android:layout_width="match_parent"
+                android:textColor="@color/biru"
                 android:layout_height="wrap_content"
                 android:textSize="15sp"
                 android:text="Nama barang :"
@@ -113,6 +117,7 @@
                 android:layout_marginStart="30dp"
                 android:textSize="15sp"
                 android:text="Merek :"
+                android:textColor="@color/biru"
                 android:layout_width="match_parent"
                 android:paddingTop="8dp"
                 android:layout_height="wrap_content" />
@@ -123,6 +128,7 @@
                 android:layout_marginStart="30dp"
                 android:paddingTop="8dp"
                 android:layout_width="match_parent"
+                android:textColor="@color/biru"
                 android:layout_height="wrap_content"
                 android:textSize="15sp"
                 android:text="Harga Beli :" />
@@ -133,6 +139,7 @@
                 android:paddingTop="8dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="@color/biru"
                 android:textSize="15sp"
                 android:text="Harga Jual :" />
 
@@ -142,6 +149,7 @@
                 android:id="@+id/text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="@color/biru"
                 android:scrollbars="vertical"
                 android:padding="8dp"
                 android:text="Deskripsi"
@@ -185,6 +193,7 @@
                 android:textSize="15sp"
                 android:layout_height="wrap_content"
                 android:paddingTop="8dp"
+                android:textColor="@color/biru"
                 android:text="Stok Toko :" />
 
             <TextView
@@ -193,6 +202,7 @@
                 android:layout_width="match_parent"
                 android:textSize="15sp"
                 android:layout_height="wrap_content"
+                android:textColor="@color/biru"
                 android:paddingTop="8dp"
                 android:text="Stok Gudang :" />
 
@@ -203,6 +213,7 @@
                 android:textSize="15sp"
                 android:layout_height="wrap_content"
                 android:paddingTop="15dp"
+                android:textColor="@color/merah"
                 android:text="Laporkan Barang Bermasalah" />
 
             <Button

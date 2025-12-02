@@ -24,7 +24,7 @@
                 android:id="@+id/gambar_logo"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:src="@drawable/person"
+                android:src="@drawable/logo"
                 android:layout_marginEnd="12dp" />
 
             <TextView
@@ -33,6 +33,7 @@
                 android:layout_height="wrap_content"
                 android:text="CV. Sejahtera Bahagia"
                 android:textSize="18sp"
+                android:textColor="@color/biru"
                 android:textStyle="bold" />
         </LinearLayout>
 
@@ -46,52 +47,58 @@
             android:src="@drawable/baseline_arrow_back" />
 
         <!-- Tanggal & Lokasi -->
+        <!-- HEADER -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="10dp">
+            android:paddingVertical="4dp">
 
-            <!-- Tanggal -->
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Tanggal"
-                android:textSize="14sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold"
+                android:layout_marginStart="7dp"
+                android:textSize="14sp" />
 
-            <!-- Lokasi -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Toko"
+                android:textStyle="bold"
                 android:textSize="14sp"
-                android:textStyle="bold"/>
+                android:layout_marginEnd="10dp"/>
         </LinearLayout>
 
-        <!-- Tanggal & Waktu -->
+        <!-- TANGGAL & WAKTU DALAM SATU BARIS -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="2dp">
+            android:paddingVertical="2dp">
 
+            <!-- TANGGAL -->
             <TextView
                 android:id="@+id/tgl"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="10 Oktober 2025"
+                android:text="2025-12-01"
                 android:textSize="14sp" />
 
+            <!-- WAKTU -->
             <TextView
-                android:id="@+id/waktu"
+                android:id="@+id/tvwaktu"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="18:30:20"
-                android:textSize="14sp"/>
+                android:text="10:12:34"
+                android:textSize="14sp"
+                android:layout_marginEnd="10dp"/>
+
         </LinearLayout>
+
 
         <View
             android:layout_width="match_parent"

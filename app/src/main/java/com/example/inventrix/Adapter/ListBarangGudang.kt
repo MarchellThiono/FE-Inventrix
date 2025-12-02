@@ -13,7 +13,8 @@ import com.example.inventrix.R
 
 class ListBarangGudang(
     private val onItemClick: (DataItem) -> Unit,
-    private val onJumlahChange: (barangId: Int, jumlah: Int) -> Unit
+    private val onJumlahChange: (barangId: Int, jumlah: Int) -> Unit,
+    private val getJumlah: (barangId: Int) -> Int
 ) : RecyclerView.Adapter<ListBarangGudang.ViewHolder>() {
 
     private var listBarang: List<DataItem> = emptyList()
@@ -52,49 +53,45 @@ class ListBarangGudang(
             .load(barang.imageUrl)
             .into(holder.ivLogo)
 
-        // klik item → detail
-        holder.itemView.setOnClickListener {
-            onItemClick(barang)
+        holder.itemView.setOnClickListener { onItemClick(barang) }
+
+        // AMBIL NILAI JUMLAH DARI HOME FRAGMENT
+        val jumlah = getJumlah(barang.id ?: 0)
+
+        if (jumlah > 0) {
+            holder.btnTambahAwal.visibility = View.GONE
+            holder.layoutCounter.visibility = View.VISIBLE
+            holder.tvJumlahKlik.text = jumlah.toString()
+        } else {
+            holder.btnTambahAwal.visibility = View.VISIBLE
+            holder.layoutCounter.visibility = View.GONE
         }
 
-        // default
-        holder.btnTambahAwal.visibility = View.VISIBLE
-        holder.layoutCounter.visibility = View.GONE
-        holder.tvJumlahKlik.text = "0"
-
-        // tombol tambah awal
         holder.btnTambahAwal.setOnClickListener {
             holder.btnTambahAwal.visibility = View.GONE
             holder.layoutCounter.visibility = View.VISIBLE
             holder.tvJumlahKlik.text = "1"
-
-            onJumlahChange(barang.id ?: 0, 1)
+            onJumlahChange(barang.id!!, 1)
         }
 
-        // tombol +
         holder.btnTambah.setOnClickListener {
             val now = holder.tvJumlahKlik.text.toString().toInt()
             val next = now + 1
             holder.tvJumlahKlik.text = next.toString()
-
-            onJumlahChange(barang.id ?: 0, next)
+            onJumlahChange(barang.id!!, next)
         }
 
-        // tombol -
         holder.btnKurang.setOnClickListener {
             val now = holder.tvJumlahKlik.text.toString().toInt()
-
             if (now > 1) {
                 val next = now - 1
                 holder.tvJumlahKlik.text = next.toString()
-                onJumlahChange(barang.id ?: 0, next)
-
+                onJumlahChange(barang.id!!, next)
             } else {
-                // kembali ke tombol awal
                 holder.layoutCounter.visibility = View.GONE
                 holder.btnTambahAwal.visibility = View.VISIBLE
                 holder.tvJumlahKlik.text = "0"
-                onJumlahChange(barang.id ?: 0, 0)
+                onJumlahChange(barang.id!!, 0)
             }
         }
     }

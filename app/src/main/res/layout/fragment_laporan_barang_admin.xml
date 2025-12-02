@@ -23,7 +23,7 @@
             android:id="@+id/gambar_logo"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:src="@drawable/person" />
+            android:src="@drawable/logo" />
 
         <TextView
             android:id="@+id/nama_sekolah"
@@ -33,6 +33,7 @@
             android:text="@string/lokasi"
             android:textSize="18sp"
             android:textStyle="bold"
+            android:layout_marginStart="12dp"
             android:textColor="@color/biru" />
     </LinearLayout>
     <View

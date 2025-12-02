@@ -87,7 +87,7 @@ class DetailAdminFragment : Fragment() {
 
         binding.kodeBarang.text = "Kode Barang : ${data.kodeBarang}"
         binding.nameBarang.text = "Nama Barang : ${data.namaBarang}"
-        binding.tvMerek.text = "Merek : ${data.merek}"
+        binding.tvMerek.text = "Merek : ${data.merek?.namaMerek}"
         binding.tvHargaBeli.text = "Harga Beli : Rp ${data.hargaBeli ?: "0"}"
         binding.tvHargaJual.text = "Harga Jual : Rp ${data.hargaJual ?: "0"}"
         binding.tvStokToko.text = "Stok Toko : ${data.stokToko}"

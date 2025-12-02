@@ -50,9 +50,9 @@
 
     <fragment
         android:id="@+id/tambahBarangFragment"
-        android:name="com.example.inventrix.UI.Admin.ui.home.TamabahBarangFragment"
+        android:name="com.example.inventrix.UI.Admin.ui.home.TambahBarangFragment"
         android:label="Tambah Barang"
-        tools:layout="@layout/fragment_tamabah_barang" >
+        tools:layout="@layout/fragment_tambah_barang" >
     <action
         android:id="@+id/action_tambahBarangFragment_to_navigation_home"
         app:destination="@id/navigation_home" />

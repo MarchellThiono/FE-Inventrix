@@ -4,59 +4,57 @@ import com.google.gson.annotations.SerializedName
 
 data class ResEditBarang(
 
-	@field:SerializedName("pesan")
+	@SerializedName("pesan")
 	val pesan: String? = null,
 
-	@field:SerializedName("data")
+	@SerializedName("data")
 	val data: EditData? = null
-)
-
-data class Merek(
-
-	@field:SerializedName("namaMerek")
-	val namaMerek: String? = null,
-
-	@field:SerializedName("id")
-	val id: Int? = null
 )
 
 data class EditData(
 
-	@field:SerializedName("stokToko")
-	val stokToko: Int? = null,
-
-	@field:SerializedName("stokGudang")
-	val stokGudang: Int? = null,
-
-	@field:SerializedName("hargaJualFormatted")
-	val hargaJualFormatted: String? = null,
-
-	@field:SerializedName("hargaBeliFormatted")
-	val hargaBeliFormatted: String? = null,
-
-	@field:SerializedName("imageUrl")
-	val imageUrl: String? = null,
-
-	@field:SerializedName("kodeBarang")
-	val kodeBarang: String? = null,
-
-	@field:SerializedName("id")
+	@SerializedName("id")
 	val id: Int? = null,
 
-	@field:SerializedName("namaBarang")
+	@SerializedName("kodeBarang")
+	val kodeBarang: String? = null,
+
+	@SerializedName("namaBarang")
 	val namaBarang: String? = null,
 
-	// backend mengirim string, bukan double
-	@field:SerializedName("hargaJual")
-	val hargaJual: String? = null,
+	@SerializedName("merek")
+	val merek: Merek? = null,
 
-	@field:SerializedName("deskripsi")
+	@SerializedName("hargaBeli")
+	val hargaBeli: Double? = null,
+
+	@SerializedName("hargaJual")
+	val hargaJual: Double? = null,
+
+	@SerializedName("hargaBeliFormatted")
+	val hargaBeliFormatted: String? = null,
+
+	@SerializedName("hargaJualFormatted")
+	val hargaJualFormatted: String? = null,
+
+	@SerializedName("stokToko")
+	val stokToko: Int? = null,
+
+	@SerializedName("stokGudang")
+	val stokGudang: Int? = null,
+
+	@SerializedName("deskripsi")
 	val deskripsi: String? = null,
 
-	// backend mengirim string, bukan double
-	@field:SerializedName("hargaBeli")
-	val hargaBeli: String? = null,
+	@SerializedName("imageUrl")
+	val imageUrl: String? = null
+)
 
-	@field:SerializedName("merek")
-	val merek: String? = null
+data class Merek(
+
+	@SerializedName("id")
+	val id: Int? = null,
+
+	@SerializedName("namaMerek")
+	val namaMerek: String? = null
 )
