@@ -12,6 +12,8 @@ import com.example.inventrix.Model.ReqTransaksiKeluar
 import com.example.inventrix.Model.ResTransaksiKeluar
 import com.example.inventrix.Server.ApiClinet
 import com.example.inventrix.databinding.FragmentKeranjangBinding
+import androidx.navigation.fragment.findNavController
+import com.example.inventrix.R
 import com.example.inventrix.formatRupiah
 import retrofit2.Call
 import retrofit2.Callback
@@ -57,7 +59,7 @@ class KeranjangFragment : Fragment() {
     private fun kirimTransaksi() {
 
         val itemsReq = KeranjangManager.getKeranjang()
-            .filter { it.jumlah > 0 }   // WAJIB!
+            .filter { it.jumlah > 0 }
             .map { ReqTransaksiKeluar.Item(it.barangId, it.jumlah) }
 
         if (itemsReq.isEmpty()) {
@@ -75,20 +77,33 @@ class KeranjangFragment : Fragment() {
             ) {
                 if (response.isSuccessful && response.body() != null) {
 
+                    val result = response.body()!!
+                    val transaksiId = result.transaksiId ?: 0   // <<—— INI YANG PENTING
+
+                    // Hapus keranjang
                     KeranjangManager.clear()
                     adapter.updateData(mutableListOf())
                     updateTotalHarga()
 
                     Toast.makeText(requireContext(), "Transaksi Berhasil!", Toast.LENGTH_SHORT).show()
 
+                    if (transaksiId != 0) {
+
+                        // KIRIM ID KE DETAIL RIWAYAT
+                        val laporanId = response.body()?.laporanId ?: 0L
+
+                        val bundle = Bundle().apply {
+                            putLong("laporanId", laporanId)
+                        }
+                        findNavController().navigate(R.id.navigation_detail_riwayat, bundle)
+
+                    }
+
                 } else {
                     val err = response.errorBody()?.string()
-                    android.util.Log.e("API_ERROR", "Server Response: $err")
-
                     Toast.makeText(requireContext(), "Error Server: $err", Toast.LENGTH_LONG).show()
                 }
             }
-
 
             override fun onFailure(call: Call<ResTransaksiKeluar>, t: Throwable) {
                 Toast.makeText(requireContext(), "Koneksi gagal: ${t.message}", Toast.LENGTH_LONG).show()

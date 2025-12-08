@@ -27,8 +27,7 @@ class DetailRiwayatFragment : Fragment() {
     private lateinit var stokAdapter: ListStokAkhir
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         _binding = FragmentDetailRiwayatBinding.inflate(inflater, container, false)
         return binding.root
@@ -37,16 +36,16 @@ class DetailRiwayatFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Ambil ID laporan dari Bundle
+        // ✔️ Ambil ID laporan dari Bundle
         laporanId = arguments?.getLong("laporanId") ?: 0L
 
         setupRecyclerView()
         loadDetailRiwayat()
 
-        // Tombol Kembali
         binding.menuBack.setOnClickListener {
-            findNavController().popBackStack()
+            requireActivity().supportFragmentManager.popBackStack()
         }
+
     }
 
     private fun setupRecyclerView() {
@@ -81,43 +80,25 @@ class DetailRiwayatFragment : Fragment() {
 
     private fun setData(data: ResDetailRiwayat) {
 
-        // =======================
-        // Format tanggal & waktu
-        // =======================
         val tanggalFull = data.tanggal ?: ""
 
-        // Pisah "2025-12-01T10:12:34.123456Z"
         val split = tanggalFull.split("T")
-
         val tanggal = split.getOrNull(0) ?: "-"
         var waktu = split.getOrNull(1) ?: "-"
-
-        // Buang microsecond → "10:12:34"
         waktu = waktu.split(".").getOrNull(0) ?: waktu
-
-        // Buang huruf Z di akhir kalau ada
         waktu = waktu.replace("Z", "")
 
-        // Set ke UI
         binding.tgl.text = tanggal
         binding.tvwaktu.text = waktu.trim()
 
-
-        // =======================
-        // Header Total & Jenis
-        // =======================
         binding.rvTotal.text = data.totalHargaFormatted ?: "0"
         binding.rvJenis.text = data.jenis ?: "-"
 
-        // =======================
-        // Barang yang dilaporkan
-        // =======================
-        barangAdapter.update(data.items ?: emptyList())
+        // ✔️ Bersihkan list dari null
+        val listItems = data.items?.filterNotNull() ?: emptyList()
 
-        // =======================
-        // Stok Akhir (After)
-        // =======================
-        stokAdapter.update(data.items ?: emptyList())
+        barangAdapter.update(listItems)
+        stokAdapter.update(listItems)
     }
 
     override fun onDestroyView() {

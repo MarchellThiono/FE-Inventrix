@@ -44,13 +44,18 @@ class RiwayatFragment : Fragment() {
         // ================================
         adapter = LaporanAdapter(arrayListOf()) { laporan ->
 
-            val bundle = Bundle()
-            bundle.putLong("laporanId", laporan.id?.toLong() ?: 0L)
+            val bundle = Bundle().apply {
+                putLong("laporanId", laporan.id?.toLong() ?: 0L)
+            }
 
-            findNavController().navigate(
-                R.id.action_navigation_riwayat_to_navigation_detail_riwayat,
-                bundle
-            )
+            val fragment = DetailRiwayatFragment().apply {
+                arguments = bundle
+            }
+
+            requireActivity().supportFragmentManager.beginTransaction()
+                .replace(R.id.container_main_menu, fragment)
+                .addToBackStack(null)
+                .commit()
         }
 
 

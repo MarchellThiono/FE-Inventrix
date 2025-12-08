@@ -27,6 +27,7 @@ class DetailFragment : Fragment() {
 
     private lateinit var ivLogo: ImageView
     private lateinit var tvKodeBarang: TextView
+    private lateinit var tvKategori: TextView
     private lateinit var tvNamaBarang: TextView
     private lateinit var tvMerek: TextView
     private lateinit var tvHarga: TextView
@@ -62,6 +63,8 @@ class DetailFragment : Fragment() {
         progressBar = view.findViewById(R.id.progressBar)
         menuBack = view.findViewById(R.id.menu_back)
         tvText = view.findViewById(R.id.text)
+        tvKategori = view.findViewById(R.id.tvKategori)
+
 
         menuBack.setOnClickListener {
             parentFragmentManager.popBackStack()
@@ -107,12 +110,11 @@ class DetailFragment : Fragment() {
                     // Karyawan / tamu: tunjukkan harga, stok toko, deskripsi
                     tvHarga.visibility = View.VISIBLE
                     // Harga: pilih yang sudah diformat dari backend jika ada, kalau tidak format sendiri
-                    val hargaFix = when {
-                        !data.hargaJualFormatted.isNullOrEmpty() -> data.hargaJualFormatted
-                        data.hargaJual != null -> formatHarga(data.hargaJual)
-                        else -> "-"
-                    }
+                    val hargaFix = if (data.hargaJual != null) formatHarga(data.hargaJual) else "-"
                     tvHarga.text = "Harga : Rp $hargaFix"
+
+                    tvHarga.text = "Harga : Rp $hargaFix"
+                    tvKategori.text = "Kategori : ${data.kategori ?: "-"}"
 
                     tvStok.text = "Stok Toko : ${data.stokToko ?: 0}"
                     layoutDeskripsi.visibility = View.VISIBLE

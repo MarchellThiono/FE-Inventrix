@@ -7,6 +7,9 @@ data class ResTransaksiKeluar(
 	@SerializedName("transaksiId")
 	val transaksiId: Int? = null,
 
+	@SerializedName("laporanId")
+	val laporanId: Long? = null,
+
 	@SerializedName("pesan")
 	val pesan: String? = null,
 

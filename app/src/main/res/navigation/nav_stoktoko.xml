@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_stoktoko"
+    app:startDestination="@+id/navigation_home">
+
+    <!-- ============================
+         HOME (STOK TOKO)
+         ============================ -->
+    <fragment
+        android:id="@+id/navigation_home"
+        android:name="com.example.inventrix.UI.Admin.ui.home.HomeStokTokoFragment"
+        android:label="Home"
+        tools:layout="@layout/fragment_home_stok_toko">
+
+        <!-- ke Halaman Permintaan Admin -->
+        <action
+            android:id="@+id/action_homeFragment_to_permintaanadminfragment"
+            app:destination="@id/nav_perminataan_admin" />
+        <action
+            android:id="@+id/action_navigation_home_to_nav_aktivitas"
+            app:destination="@id/nav_aktivitas" />
+
+    </fragment>
+
+
+    <!-- ============================
+         FORM PERMINTAAN ADMIN
+         ============================ -->
+    <fragment
+        android:id="@+id/nav_perminataan_admin"
+        android:name="com.example.inventrix.UI.Admin.ui.home.PermintaanAdminFragment"
+        android:label="Permintaan"
+        tools:layout="@layout/fragment_permintaan_admin">
+        <action
+            android:id="@+id/action_nav_perminataan_admin_to_navigation_home"
+            app:destination="@id/navigation_home" />
+    </fragment>
+
+
+    <!-- ============================
+         🔥 ACTION DARI MENU → HOME (MODE STOK TOKO)
+         ============================ -->
+    <action
+        android:id="@+id/action_menuFragment_to_homeFragment_stok"
+        app:destination="@id/navigation_home" />
+
+    <fragment
+        android:id="@+id/nav_aktivitas"
+        android:name="com.example.inventrix.UI.Admin.ui.aktivitas.AktivitasFragment"
+        tools:layout="@layout/fragment_aktivitas"
+        android:label="@string/aktivitas">
+
+    </fragment>
+
+</navigation>

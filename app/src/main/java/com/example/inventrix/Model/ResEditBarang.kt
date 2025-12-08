@@ -3,7 +3,6 @@ package com.example.inventrix.Model
 import com.google.gson.annotations.SerializedName
 
 data class ResEditBarang(
-
 	@SerializedName("pesan")
 	val pesan: String? = null,
 
@@ -22,6 +21,9 @@ data class EditData(
 	@SerializedName("namaBarang")
 	val namaBarang: String? = null,
 
+	@SerializedName("kategori")
+	val kategori: String? = null,   // ✔ DITAMBAHKAN
+
 	@SerializedName("merek")
 	val merek: Merek? = null,
 
@@ -31,27 +33,24 @@ data class EditData(
 	@SerializedName("hargaJual")
 	val hargaJual: Double? = null,
 
-	@SerializedName("hargaBeliFormatted")
-	val hargaBeliFormatted: String? = null,
-
-	@SerializedName("hargaJualFormatted")
-	val hargaJualFormatted: String? = null,
-
 	@SerializedName("stokToko")
 	val stokToko: Int? = null,
 
 	@SerializedName("stokGudang")
 	val stokGudang: Int? = null,
 
+	@SerializedName("stokMinimum")
+	val stokMinimum: Int? = null,   // ✔ DITAMBAHKAN
+
 	@SerializedName("deskripsi")
 	val deskripsi: String? = null,
 
 	@SerializedName("imageUrl")
-	val imageUrl: String? = null
+	val imageUrl: String? = null,
 )
 
-data class Merek(
 
+data class Merek(
 	@SerializedName("id")
 	val id: Int? = null,
 

@@ -78,7 +78,7 @@
         android:paddingTop="8dp"
         android:paddingRight="16dp"
         android:paddingBottom="8dp"
-        android:text="Diproses"
+        android:text="Diminta"
         android:textColor="@android:color/black"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/garis_bawah_chip" />
@@ -97,6 +97,21 @@
         android:text="Dikirim"
         android:textColor="@android:color/black"
         app:layout_constraintStart_toEndOf="@id/diproses"
+        app:layout_constraintTop_toTopOf="@id/diproses" />
+
+    <TextView
+        android:id="@+id/Selesai"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:background="@drawable/bg_chip"
+        android:paddingLeft="16dp"
+        android:paddingTop="8dp"
+        android:paddingRight="16dp"
+        android:paddingBottom="8dp"
+        android:text="Selesai"
+        android:textColor="@android:color/black"
+        app:layout_constraintStart_toEndOf="@id/dikirim"
         app:layout_constraintTop_toTopOf="@id/diproses" />
 
     <androidx.recyclerview.widget.RecyclerView

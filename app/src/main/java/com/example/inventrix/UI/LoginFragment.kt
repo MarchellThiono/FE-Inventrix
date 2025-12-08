@@ -17,6 +17,8 @@ import com.example.inventrix.Model.LoginReq
 import com.example.inventrix.Model.LoginRes
 import com.example.inventrix.Server.ApiClinet
 import com.example.inventrix.UI.Admin.MainAdminActivity
+import com.example.inventrix.UI.Admin.ui.MainMenuActivity
+import com.example.inventrix.UI.Admin.ui.MenuFragment
 import com.example.inventrix.UI.Gudang.MainActivityGudang
 import com.example.inventrix.UI.Karyawan.HomeKaryawanFragment
 import retrofit2.Call
@@ -102,9 +104,11 @@ class LoginFragment : Fragment() {
 
                         when (role) {
                             "owner", "admin", "role_admin" -> {
-                                startActivity(Intent(requireContext(), MainAdminActivity::class.java))
-                                requireActivity().finish()
+                                val intent = Intent(requireContext(), MainMenuActivity::class.java)
+                                startActivity(intent)
+                                requireActivity().finish()   // TUTUP MainActivity supaya tidak kembali ke login
                             }
+
 
                             "warehouse", "gudang", "role_gudang" -> {
                                 startActivity(Intent(requireContext(), MainActivityGudang::class.java))

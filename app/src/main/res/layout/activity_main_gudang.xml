@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
-
+    <!-- NAV HOST (untuk tab Diminta, Dikirim, Selesai) -->
     <fragment
         android:id="@+id/nav_host_fragment_activity_main_gudang"
         android:name="androidx.navigation.fragment.NavHostFragment"
@@ -16,13 +16,20 @@
         app:defaultNavHost="true"
         app:navGraph="@navigation/mobile_navigation" />
 
+    <!-- CONTAINER TAMBAHAN UNTUK DETAIL PERMINTAAN -->
+    <FrameLayout
+        android:id="@+id/container_detail_gudang"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:background="@android:color/white" />
+
     <!-- BOTTOM NAV -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/nav_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        app:menu="@menu/bottom_nav_menu"
- />
+        app:menu="@menu/bottom_nav_menu" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

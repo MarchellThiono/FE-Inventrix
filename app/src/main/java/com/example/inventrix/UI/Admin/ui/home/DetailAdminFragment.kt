@@ -74,86 +74,93 @@ class DetailAdminFragment : Fragment() {
 
                 override fun onFailure(call: Call<ResEditBarang>, t: Throwable) {
                     binding.progressBar.visibility = View.GONE
-                    Toast.makeText(requireContext(), "Error: ${t.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "Error: ${t.message}", Toast.LENGTH_SHORT)
+                        .show()
                 }
             })
     }
 
     private fun tampilkanData(data: EditData) {
-
         Glide.with(this)
             .load(data.imageUrl)
             .into(binding.ivLogo)
 
         binding.kodeBarang.text = "Kode Barang : ${data.kodeBarang}"
         binding.nameBarang.text = "Nama Barang : ${data.namaBarang}"
+
+        binding.tvKategori.text = "Kategori : ${data.kategori}"      // ✔ TAMBAHKAN
         binding.tvMerek.text = "Merek : ${data.merek?.namaMerek}"
+
         binding.tvHargaBeli.text = "Harga Beli : Rp ${data.hargaBeli ?: "0"}"
         binding.tvHargaJual.text = "Harga Jual : Rp ${data.hargaJual ?: "0"}"
+
         binding.tvStokToko.text = "Stok Toko : ${data.stokToko}"
         binding.tvStokGudang.text = "Stok Gudang : ${data.stokGudang}"
+
+        binding.tvStokMinimum.text = "Stok Minimum : ${data.stokMinimum}"  // ✔ TAMBAHKAN
+
         binding.tvDescription.text = data.deskripsi ?: "-"
     }
 
+
     private fun setupListeners() {
 
+        // Kembali
         binding.menuBack.setOnClickListener {
             requireActivity().onBackPressedDispatcher.onBackPressed()
         }
 
-        binding.tvlapor.setOnClickListener {
-            val bundle = Bundle().apply { putInt("idBarang", barangId) }
-            findNavController().navigate(
-                R.id.action_detailAdminFragment_to_laporanBarangAdminFragment,
-                bundle
-            )
-        }
-
-        binding.tvpermintaan.setOnClickListener {
-            showDialogPermintaan()
-        }
+        // Tombol hapus barang
+        binding.rvhapus.setOnClickListener { showDialogHapus() }
+        binding.rvhapusbarang.setOnClickListener { showDialogHapus() }
     }
 
-    private fun showDialogPermintaan() {
-        val input = EditText(requireContext())
-        input.inputType = InputType.TYPE_CLASS_NUMBER
-        input.hint = "Masukkan jumlah"
-
+    // ============================================
+    //              DIALOG HAPUS BARANG
+    // ============================================
+    private fun showDialogHapus() {
         AlertDialog.Builder(requireContext())
-            .setTitle("Permintaan Barang")
-            .setMessage("Masukkan jumlah barang yang diminta:")
-            .setView(input)
-            .setPositiveButton("Kirim") { _, _ ->
-                val jumlah = input.text.toString().toIntOrNull() ?: 0
-                if (jumlah <= 0) {
-                    Toast.makeText(requireContext(), "Jumlah tidak valid", Toast.LENGTH_SHORT).show()
-                } else {
-                    kirimPermintaan(jumlah)
-                }
+            .setTitle("Hapus Barang")
+            .setMessage("Apakah Anda yakin ingin menghapus barang ini?\nTindakan ini tidak dapat dibatalkan.")
+            .setPositiveButton("Ya") { _, _ ->
+                hapusBarang()
             }
             .setNegativeButton("Batal", null)
             .show()
     }
 
-    private fun kirimPermintaan(jumlah: Int) {
+    private fun hapusBarang() {
+        binding.progressBar.visibility = View.VISIBLE
 
-        val body = mapOf(
-            "barangId" to barangId,
-            "jumlah" to jumlah
-        )
-
-        ApiClinet.instance.kirimPermintaanGudang(body)
+        ApiClinet.instance.hapusBarang(barangId)
             .enqueue(object : Callback<ResPesan> {
                 override fun onResponse(call: Call<ResPesan>, response: Response<ResPesan>) {
+                    binding.progressBar.visibility = View.GONE
+
                     if (response.isSuccessful) {
-                        Toast.makeText(requireContext(), response.body()?.pesan ?: "Berhasil", Toast.LENGTH_LONG).show()
+                        Toast.makeText(
+                            requireContext(),
+                            response.body()?.pesan ?: "Barang berhasil dihapus",
+                            Toast.LENGTH_LONG
+                        ).show()
+
+                        requireActivity().onBackPressedDispatcher.onBackPressed()
                     } else {
-                        Toast.makeText(requireContext(), "Gagal mengirim permintaan", Toast.LENGTH_LONG).show()
+                        Toast.makeText(
+                            requireContext(),
+                            "Gagal menghapus barang",
+                            Toast.LENGTH_LONG
+                        ).show()
                     }
                 }
 
                 override fun onFailure(call: Call<ResPesan>, t: Throwable) {
-                    Toast.makeText(requireContext(), "Error: ${t.message}", Toast.LENGTH_LONG).show()
+                    binding.progressBar.visibility = View.GONE
+                    Toast.makeText(
+                        requireContext(),
+                        "Error: ${t.message}",
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
             })
     }

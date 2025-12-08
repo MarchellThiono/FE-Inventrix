@@ -31,13 +31,15 @@ data class DataItem(
 	@SerializedName("namaBarang")
 	val namaBarang: String? = null,
 
+	@SerializedName("kategori")
+	val kategori: String? = null,   // 🆕 TAMBAH INI
+
 	@SerializedName("merek")
 	val merek: String? = null,
 
 	@SerializedName("imageUrl")
 	val imageUrl: String? = null,
 
-	// BE kirim Double, bukan String
 	@SerializedName("hargaJual")
 	val hargaJual: Double? = null,
 
@@ -47,3 +49,4 @@ data class DataItem(
 	@SerializedName("stokGudang")
 	val stokGudang: Int? = null
 )
+

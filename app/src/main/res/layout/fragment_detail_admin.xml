@@ -113,6 +113,17 @@
                 android:paddingTop="8dp" />
 
             <TextView
+                android:id="@+id/tvKategori"
+                android:layout_marginStart="30dp"
+                android:textSize="15sp"
+                android:text="Kategori :"
+                android:textColor="@color/biru"
+                android:layout_width="match_parent"
+                android:paddingTop="8dp"
+                android:layout_height="wrap_content" />
+
+
+            <TextView
                 android:id="@+id/tvMerek"
                 android:layout_marginStart="30dp"
                 android:textSize="15sp"
@@ -207,22 +218,16 @@
                 android:text="Stok Gudang :" />
 
             <TextView
-                android:id="@+id/tvlapor"
+                android:id="@+id/tvStok_Minimum"
                 android:layout_marginStart="30dp"
                 android:layout_width="match_parent"
                 android:textSize="15sp"
                 android:layout_height="wrap_content"
-                android:paddingTop="15dp"
-                android:textColor="@color/merah"
-                android:text="Laporkan Barang Bermasalah" />
+                android:textColor="@color/biru"
+                android:paddingTop="8dp"
+                android:text="Stok Minimum :" />
 
-            <Button
-                android:id="@+id/tvpermintaan"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:layout_margin="20dp"
-                android:text="Buat Permintaan Ke Gudang"/>
+
         </LinearLayout>
     </ScrollView>
 

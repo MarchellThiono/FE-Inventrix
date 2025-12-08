@@ -33,9 +33,9 @@ class KelolaMerekFragment : Fragment() {
     ): View? {
 
         val view = inflater.inflate(R.layout.fragment_kelola_merek, container, false)
-        val btnBack = view.findViewById<ImageView>(R.id.btnback)
+        val btnBack = view.findViewById<View>(R.id.btnback)
         btnBack.setOnClickListener {
-            findNavController().navigate(R.id.action_kelolaMerekFragment_to_navigation_home)
+            requireActivity().supportFragmentManager.popBackStack()
         }
 
 

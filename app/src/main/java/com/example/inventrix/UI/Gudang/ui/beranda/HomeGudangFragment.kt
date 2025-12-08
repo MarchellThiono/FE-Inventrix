@@ -13,9 +13,11 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.inventrix.Adapter.ListBarangGudang
+import com.example.inventrix.Adapter.ListKategori
 import com.example.inventrix.Adapter.ListMerek
 import com.example.inventrix.Model.BarangDipilihGudang
 import com.example.inventrix.Model.DataItem
+import com.example.inventrix.Model.ResKategoriList
 import com.example.inventrix.Model.ResTampilMerek
 import com.example.inventrix.Model.TampilBarangRes
 import com.example.inventrix.R
@@ -36,6 +38,8 @@ class HomeGudangFragment : Fragment() {
     private lateinit var adapter: ListBarangGudang
     private var allBarangList = listOf<DataItem>()
     private var merekTerpilih: String? = null
+    private var kategoriTerpilih: String? = null
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,6 +50,7 @@ class HomeGudangFragment : Fragment() {
         setupRecyclerView()
         setupSearchBar()
         setupChipMerek()
+        setupChipKategori()
         loadBarang()
 
         // tombol lanjut
@@ -134,48 +139,116 @@ class HomeGudangFragment : Fragment() {
         })
     }
 
-    private fun setupChipMerek() {
-        binding.chipSemua.setOnClickListener { tampilkanBottomSheetMerek() }
+    private fun setupChipKategori() {
+        binding.chipKategori.setOnClickListener {
+            tampilkanBottomSheetKategori()
+        }
     }
 
-    private fun tampilkanBottomSheetMerek() {
-        val view = layoutInflater.inflate(R.layout.bottomsheet_merek, null)
-        val rv = view.findViewById<RecyclerView>(R.id.rvMerek)
-        val tvTitle = view.findViewById<TextView>(R.id.titleMerek)
+    private fun tampilkanBottomSheetKategori() {
+
+        val view = layoutInflater.inflate(R.layout.bottomsheet_kategori, null)
+        val rvKategori = view.findViewById<RecyclerView>(R.id.rvKategori)
+        val titleKategori = view.findViewById<TextView>(R.id.titleKategori)
 
         val dialog = BottomSheetDialog(requireContext())
         dialog.setContentView(view)
         dialog.show()
 
-        val adapterMerek = ListMerek(emptyList()) { merek ->
-            merekTerpilih = merek
-            binding.chipSemua.text = merek
-            filterBarang(binding.searchViewBarang.query.toString())
-            dialog.dismiss()
-        }
+        rvKategori.layoutManager = LinearLayoutManager(requireContext())
 
-        rv.layoutManager = LinearLayoutManager(requireContext())
-        rv.adapter = adapterMerek
+        // tampilkan loading
+        rvKategori.adapter = ListKategori(listOf("Memuat...")) { }
 
-        ApiClinet.instance.getMerekList()
-            .enqueue(object : Callback<ResTampilMerek> {
+        ApiClinet.instance.getKategoriList()
+            .enqueue(object : Callback<ResKategoriList> {
                 override fun onResponse(
-                    call: Call<ResTampilMerek>,
-                    response: Response<ResTampilMerek>
+                    call: Call<ResKategoriList>,
+                    res: Response<ResKategoriList>
                 ) {
-                    val list = response.body()?.data?.mapNotNull { it?.namaMerek } ?: emptyList()
-                    adapterMerek.updateData(list)
+
+                    val kategoriDariServer =
+                        res.body()?.data?.mapNotNull { it?.nama } ?: emptyList()
+
+                    val listKategori = mutableListOf("Semua Kategori")
+                    listKategori.addAll(kategoriDariServer)
+
+                    val kategoriAdapter = ListKategori(listKategori) { kategori ->
+
+                        kategoriTerpilih =
+                            if (kategori == "Semua Kategori") null else kategori
+
+                        binding.chipKategori.text = kategori
+                        filterBarang(binding.searchViewBarang.query.toString())
+
+                        dialog.dismiss()
+                    }
+
+                    rvKategori.adapter = kategoriAdapter
+                    titleKategori.text = "Pilih Kategori"
                 }
 
-                override fun onFailure(call: Call<ResTampilMerek>, t: Throwable) {
-                    tvTitle.text = "Gagal memuat merek"
+                override fun onFailure(call: Call<ResKategoriList>, t: Throwable) {
+                    rvKategori.adapter = ListKategori(listOf("Gagal Memuat")) { }
+                    titleKategori.text = "Gagal Memuat"
                 }
             })
+    }
+
+
+    private fun setupChipMerek() {
+        binding.chipSemua.setOnClickListener { tampilkanBottomSheetMerek() }
+    }
+
+    private fun tampilkanBottomSheetMerek() {
+        val dialog = BottomSheetDialog(requireContext())
+        val view = layoutInflater.inflate(R.layout.bottomsheet_merek, null)
+
+        val rv = view.findViewById<RecyclerView>(R.id.rvMerek)
+        val title = view.findViewById<TextView>(R.id.titleMerek)
+
+        rv.layoutManager = LinearLayoutManager(requireContext())
+
+        // ✅ Loading sementara
+        val loadingAdapter = ListMerek(listOf("Memuat...")) { }
+        rv.adapter = loadingAdapter
+
+        ApiClinet.instance.getMerekList().enqueue(object : Callback<ResTampilMerek> {
+            override fun onResponse(
+                call: Call<ResTampilMerek>,
+                res: Response<ResTampilMerek>
+            ) {
+                val list = mutableListOf("Semua Merek")
+                list += res.body()?.data?.mapNotNull { it?.namaMerek } ?: emptyList()
+
+                val adapterMerek = ListMerek(list) { merek ->
+                    merekTerpilih = if (merek == "Semua Merek") null else merek
+
+                    // ✅ INI YANG DIPERBAIKI
+                    binding.chipSemua.text = merek
+                    filterBarang(binding.searchViewBarang.query.toString())
+
+                    dialog.dismiss()
+                }
+
+                rv.adapter = adapterMerek
+                title.text = "Pilih Merek"
+            }
+
+            override fun onFailure(call: Call<ResTampilMerek>, t: Throwable) {
+                title.text = "Gagal memuat"
+                Toast.makeText(requireContext(), "Gagal memuat merek", Toast.LENGTH_SHORT).show()
+            }
+        })
+
+        dialog.setContentView(view)
+        dialog.show()
     }
 
     private fun filterBarang(q: String?) {
         var filtered = allBarangList
 
+        // ✅ Filter nama & kode
         if (!q.isNullOrEmpty()) {
             filtered = filtered.filter {
                 it.namaBarang!!.lowercase().contains(q.lowercase()) ||
@@ -183,8 +256,14 @@ class HomeGudangFragment : Fragment() {
             }
         }
 
+        // ✅ Filter merek
         merekTerpilih?.let { m ->
             filtered = filtered.filter { it.merek == m }
+        }
+
+        // ✅ Filter kategori (INI YANG BARU)
+        kategoriTerpilih?.let { k ->
+            filtered = filtered.filter { it.kategori == k }
         }
 
         adapter.updateData(filtered)

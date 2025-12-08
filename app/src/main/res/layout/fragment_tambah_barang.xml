@@ -56,6 +56,32 @@
             android:layout_marginStart="20dp"
             android:src="@drawable/baseline_arrow_back" />
 
+        <TextView
+            android:id="@+id/rvKategori"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/bg_chip"
+            android:paddingLeft="16dp"
+            android:paddingTop="8dp"
+            android:paddingRight="16dp"
+            android:paddingBottom="8dp"
+            android:text="Pilih Kategori"
+            android:textColor="@android:color/black"/>
+
+        <TextView
+            android:id="@+id/rvKodeBarang"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/solid_rec"
+            android:padding="16dp"
+            android:textColor="@color/biru"
+            android:textStyle="bold"
+            android:hint="Kode Barang"/>
+
         <!-- Input Data Barang -->
         <EditText
             android:id="@+id/rvNamaBarang"
@@ -68,19 +94,6 @@
             android:textColor="@color/biru"
             android:textStyle="bold"
             android:hint="Nama Barang"
-            android:inputType="text" />
-
-        <EditText
-            android:id="@+id/rvKodeBarang"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="20dp"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/solid_rec"
-            android:padding="16dp"
-            android:textColor="@color/biru"
-            android:textStyle="bold"
-            android:hint="Kode Barang"
             android:inputType="text" />
 
         <TextView
@@ -186,13 +199,63 @@
                     android:textSize="12sp"
                     android:textStyle="bold" />
             </FrameLayout>
+
         </LinearLayout>
 
+        <EditText
+            android:id="@+id/rvStokToko"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/solid_rec"
+            android:padding="16dp"
+            android:textColor="@color/biru"
+            android:textStyle="bold"
+            android:hint="Stok Awal Toko"
+            android:inputType="number" />
+
+        <EditText
+            android:id="@+id/rvStokGudang"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/solid_rec"
+            android:padding="16dp"
+            android:textColor="@color/biru"
+            android:textStyle="bold"
+            android:hint="Stok Awal Gudang"
+            android:inputType="number" />
+
+
+        <EditText
+            android:id="@+id/rvStokMinimum"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/solid_rec"
+            android:padding="16dp"
+            android:textColor="@color/biru"
+            android:textStyle="bold"
+            android:hint="Stok minimum"
+            android:inputType="number" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:text="Digunakan untuk pengingat stok kurang"
+            android:textColor="@color/black"
+            android:textSize="15sp" />
         <!-- Deskripsi -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
             android:text="Deskripsi"
             android:textColor="@color/black"
             android:textSize="15sp" />
@@ -225,6 +288,7 @@
             android:gravity="center_horizontal"
             android:layout_marginHorizontal="20dp"
             android:paddingBottom="40dp">
+
 
             <Button
                 android:id="@+id/btnSimpan"

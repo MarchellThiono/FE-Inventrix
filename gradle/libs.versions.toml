@@ -1,6 +1,7 @@
 [versions]
 agp = "8.8.0"
 androidAsyncHttp = "1.4.11"
+cardview = "1.0.0"
 converterGson = "2.9.0"
 glide = "4.15.1"
 kotlin = "1.9.24"
@@ -22,6 +23,7 @@ swiperefreshlayout = "1.1.0"
 
 [libraries]
 android-async-http = { module = "com.loopj.android:android-async-http", version.ref = "androidAsyncHttp" }
+androidx-cardview = { module = "androidx.cardview:cardview", version.ref = "cardview" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-swiperefreshlayout = { module = "androidx.swiperefreshlayout:swiperefreshlayout", version.ref = "swiperefreshlayout" }
 glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }

@@ -60,6 +60,22 @@
         android:layout_marginStart="26dp"
         android:layout_marginEnd="26dp" />
 
+    <TextView
+        android:id="@+id/chipKategori"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Kategori"
+        android:background="@drawable/bg_chip"
+        android:textColor="@android:color/black"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="26dp"
+        app:layout_constraintTop_toBottomOf="@id/searchViewBarang"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <!-- Chip kategori -->
     <TextView
         android:id="@+id/chipSemua"
@@ -73,9 +89,9 @@
         android:paddingTop="8dp"
         android:paddingBottom="8dp"
         android:layout_marginTop="16dp"
-        android:layout_marginStart="26dp"
+        android:layout_marginStart="15dp"
         app:layout_constraintTop_toBottomOf="@id/searchViewBarang"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toEndOf="@id/chipKategori" />
 
     <!-- Garis bawah kategori -->
     <View

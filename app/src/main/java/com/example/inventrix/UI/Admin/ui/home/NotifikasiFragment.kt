@@ -54,9 +54,9 @@ class NotifikasiFragment : Fragment() {
         binding.rvPemberitahuan.adapter = pemberitahuanAdapter
 
         loadData()
-        binding.btnback.setOnClickListener {
-            findNavController().navigate(R.id.action_notifikasiFragment_to_navigation_home)
-        }
+//        binding.btnback.setOnClickListener {
+//            findNavController().navigate(R.id.action_notifikasiFragment_to_navigation_home)
+//        }
     }
 
     private fun loadData() {
@@ -69,28 +69,37 @@ class NotifikasiFragment : Fragment() {
             return
         }
 
-        ApiClinet.instance.getNotifikasi(userId)
+        // ===================== LOAD PERINGATAN =====================
+        ApiClinet.instance.getPeringatan(userId)
             .enqueue(object : Callback<List<Notifikasi>> {
                 override fun onResponse(call: Call<List<Notifikasi>>, response: Response<List<Notifikasi>>) {
-                    if (!response.isSuccessful) return
-
                     val data = response.body() ?: emptyList()
-
                     listPeringatanData.clear()
-                    listPemberitahuanData.clear()
-
-                    listPeringatanData.addAll(data.filter { it.tipe == "STOK_MINIM" })
-                    listPemberitahuanData.addAll(data.filter { it.tipe != "STOK_MINIM" })
-
+                    listPeringatanData.addAll(data)
                     peringatanAdapter.notifyDataSetChanged()
+                }
+
+                override fun onFailure(call: Call<List<Notifikasi>>, t: Throwable) {
+                    Toast.makeText(requireContext(), "Gagal load peringatan", Toast.LENGTH_SHORT).show()
+                }
+            })
+
+        // ===================== LOAD PEMBERITAHUAN =====================
+        ApiClinet.instance.getPemberitahuan(userId)
+            .enqueue(object : Callback<List<Notifikasi>> {
+                override fun onResponse(call: Call<List<Notifikasi>>, response: Response<List<Notifikasi>>) {
+                    val data = response.body() ?: emptyList()
+                    listPemberitahuanData.clear()
+                    listPemberitahuanData.addAll(data)
                     pemberitahuanAdapter.notifyDataSetChanged()
                 }
 
                 override fun onFailure(call: Call<List<Notifikasi>>, t: Throwable) {
-                    Toast.makeText(requireContext(), "Error: ${t.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "Gagal load pemberitahuan", Toast.LENGTH_SHORT).show()
                 }
             })
     }
+
 
     private fun confirmDelete(notif: Notifikasi) {
         AlertDialog.Builder(requireContext())

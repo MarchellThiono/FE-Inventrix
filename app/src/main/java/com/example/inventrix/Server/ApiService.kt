@@ -1,23 +1,6 @@
 package com.example.inventrix.Server
 
-import com.example.inventrix.Model.LoginReq
-import com.example.inventrix.Model.LoginRes
-import com.example.inventrix.Model.Notifikasi
-import com.example.inventrix.Model.ReqCreateLaporan
-import com.example.inventrix.Model.ReqFilterLaporan
-import com.example.inventrix.Model.ReqTransaksiKeluar
-import com.example.inventrix.Model.ResDetailRiwayat
-import com.example.inventrix.Model.ResEditBarang
-import com.example.inventrix.Model.ResEditMerek
-import com.example.inventrix.Model.ResHapusMerek
-import com.example.inventrix.Model.ResLaporanResponse
-import com.example.inventrix.Model.ResListPermintaanItem
-import com.example.inventrix.Model.ResPesan
-import com.example.inventrix.Model.ResTambahBarang
-import com.example.inventrix.Model.ResTambahMerek
-import com.example.inventrix.Model.ResTampilMerek
-import com.example.inventrix.Model.ResTransaksiKeluar
-import com.example.inventrix.Model.TampilBarangRes
+import com.example.inventrix.Model.*
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Call
@@ -38,43 +21,46 @@ interface ApiService {
     // ======================================================
     //                     BARANG
     // ======================================================
-
-    // Tambah barang
     @Multipart
     @POST("barang/tambah")
     fun tambahBarang(
-        @Part("kodeBarang") kodeBarang: RequestBody,
+        @Part("kategoriId") kategoriId: RequestBody,
         @Part("namaBarang") namaBarang: RequestBody,
         @Part("merekId") merekId: RequestBody,
         @Part("hargaBeli") hargaBeli: RequestBody,
         @Part("hargaJual") hargaJual: RequestBody,
+        @Part("stokToko") stokToko: RequestBody,
+        @Part("stokGudang") stokGudang: RequestBody,
+        @Part("stokMinimum") stokMinimum: RequestBody,
         @Part("deskripsi") deskripsi: RequestBody,
         @Part image: MultipartBody.Part?
     ): Call<ResTambahBarang>
 
-    // List barang
     @GET("barang/list")
     fun getBarangList(): Call<TampilBarangRes>
 
-    // DETAIL barang (Edit)
     @GET("barang/detail/{id}")
-    fun getDetailBarang(
-        @Path("id") id: Int
-    ): Call<ResEditBarang>
+    fun getDetailBarang(@Path("id") id: Int): Call<ResEditBarang>
 
-    // UPDATE BARANG (EDIT)
     @Multipart
     @PUT("barang/edit/{id}")
     fun editBarang(
         @Path("id") id: Int,
-        @Part("kodeBarang") kodeBarang: RequestBody,
-        @Part("namaBarang") namaBarang: RequestBody,
-        @Part("merekId") merekId: RequestBody,
-        @Part("hargaBeli") hargaBeli: RequestBody,
-        @Part("hargaJual") hargaJual: RequestBody,
-        @Part("deskripsi") deskripsi: RequestBody,
+        @Part("namaBarang") namaBarang: RequestBody?,
+        @Part("merekId") merekId: RequestBody?,
+        @Part("hargaBeli") hargaBeli: RequestBody?,
+        @Part("hargaJual") hargaJual: RequestBody?,
+        @Part("stokMinimum") stokMinimum: RequestBody?,
+        @Part("deskripsi") deskripsi: RequestBody?,
+        @Part("kategoriId") kategoriId: RequestBody?,
         @Part image: MultipartBody.Part?
     ): Call<ResEditBarang>
+
+    @DELETE("barang/hapus/{id}")
+    fun hapusBarang(@Path("id") id: Int): Call<ResPesan>
+
+    @GET("barang/generate-kode/{kategoriId}")
+    fun generateKode(@Path("kategoriId") kategoriId: Int): Call<Map<String, Any>>
 
     @POST("transaksi/keluar")
     fun createTransaksi(
@@ -82,108 +68,110 @@ interface ApiService {
     ): Call<ResTransaksiKeluar>
 
 
-
     // ======================================================
-    //                     MEREK
+    //                     MEREK & KATEGORI
     // ======================================================
-
     @GET("merek/list")
     fun getMerekList(): Call<ResTampilMerek>
 
     @FormUrlEncoded
     @POST("merek/tambah")
-    fun tambahMerek(
-        @Field("namaMerek") nama: String
-    ): Call<ResTambahMerek>
-
+    fun tambahMerek(@Field("namaMerek") nama: String): Call<ResTambahMerek>
 
     @FormUrlEncoded
     @PUT("merek/edit/{id}")
-    fun editMerek(
-        @Path("id") id: Int,
-        @Field("namaBaru") namaBaru: String
-    ): Call<ResEditMerek>
+    fun editMerek(@Path("id") id: Int, @Field("namaBaru") namaBaru: String): Call<ResEditMerek>
 
     @DELETE("merek/hapus/{id}")
-    fun hapusMerek(
-        @Path("id") id: Int
-    ): Call<ResHapusMerek>
+    fun hapusMerek(@Path("id") id: Int): Call<ResHapusMerek>
+
+    @GET("kategori/list")
+    fun getKategoriList(): Call<ResKategoriList>
+
+    @DELETE("kategori/hapus/{id}")
+    fun deleteKategori(@Path("id") id: Int): Call<Map<String, Any>>
+
+    @FormUrlEncoded
+    @POST("kategori/tambah")
+    fun tambahKategori(
+        @Field("nama") nama: String,
+        @Field("kodeAwal") kodeAwal: String
+    ): Call<Map<String, Any>>
+
+    @FormUrlEncoded
+    @PUT("kategori/edit/{id}")
+    fun updateKategori(
+        @Path("id") id: Int,
+        @Field("nama") nama: String?,
+        @Field("kodeAwal") kodeAwal: String?
+    ): Call<Map<String, Any>>
+
+    @GET("kategori/{id}")
+    fun getKategoriDetail(@Path("id") id: Int): Call<Map<String, Any>>
+
 
     // ======================================================
-    //                     Laporan
+    //                     LAPORAN
     // ======================================================
-
     @POST("laporan/create")
-    fun createLaporan(
-        @Body body: ReqCreateLaporan
-    ): Call<ResPesan>
+    fun createLaporan(@Body body: ReqCreateLaporan): Call<ResPesan>
 
     @POST("laporan/list")
-    fun filterLaporan(
-        @Body req: ReqFilterLaporan
-    ): Call<ResLaporanResponse>
+    fun filterLaporan(@Body req: ReqFilterLaporan): Call<ResLaporanResponse>
 
     @GET("laporan/detail/{id}")
-    fun getDetailRiwayat(
-        @Path("id") id: Long
-    ): Call<ResDetailRiwayat>
-// ======================================================
-//                     PERMINTAAN
-// ======================================================
+    fun getDetailRiwayat(@Path("id") id: Long): Call<ResDetailRiwayat>
 
-    // 1. Admin kirim permintaan ke gudang
+
+    // ======================================================
+    //                     PERMINTAAN (FINAL)
+    // ======================================================
+
+    // ============= OWNER (ADMIN TOKO) =============
     @POST("permintaan/create")
     fun kirimPermintaanGudang(
         @Body body: Map<String, @JvmSuppressWildcards Any>
     ): Call<ResPesan>
 
-    // 2. Gudang melihat permintaan status DIPINTA
-    @GET("permintaan/warehouse/diminta")
-    fun getPermintaanGudangDiminta(): Call<List<ResListPermintaanItem>>
-
-    // 3. Gudang melihat permintaan status DIKIRIM
-    @GET("permintaan/dikirim")
-    fun getPermintaanGudangDikirim(): Call<List<ResListPermintaanItem>>
-
-    // 4. Gudang konfirmasi & kirim barang
-    @POST("permintaan/kirim/{id}")
-    fun kirimBarang(
-        @Path("id") id: Int
-    ): Call<ResPesan>
-
-
-
-// =======================
-// ADMIN - LIHAT PERMINTAAN
-// =======================
-    // Admin lihat permintaan yang masih DIPINTA (baru dibuat admin)
     @GET("permintaan/owner/diminta")
     fun getAdminPermintaanDiminta(): Call<List<ResListPermintaanItem>>
 
-    // Admin lihat permintaan yang SUDAH DIKIRIM oleh gudang
-    @GET("permintaan/dikirim")
+    @GET("permintaan/diproses")
     fun getAdminPermintaanDikirim(): Call<List<ResListPermintaanItem>>
 
+    @GET("permintaan/selesai")
+    fun getAdminPermintaanSelesai(): Call<List<ResListPermintaanItem>>
+
     @POST("permintaan/selesai/{id}")
-    fun konfirmasiPermintaanSelesai(
-        @Path("id") id: Int
-    ): Call<ResPesan>
+    fun konfirmasiPermintaanSelesai(@Path("id") id: Int): Call<ResPesan>
+
+    @DELETE("permintaan/hapus/{id}")
+    fun hapusPermintaan(@Path("id") id: Int): Call<ResPesan>
+
+    @GET("permintaan/detail/{id}")
+    fun getDetailPermintaan(@Path("id") id: Int): Call<ResDetailPermintaan>
 
 
+    // ============= WAREHOUSE (GUDANG) =============
+    @GET("permintaan/warehouse/diminta")
+    fun getPermintaanGudangDiminta(): Call<List<ResListPermintaanItem>>
+
+    @POST("permintaan/kirim/{id}")
+    fun kirimBarang(@Path("id") id: Int): Call<ResPesan>
+
+    @GET("permintaan/diproses")
+    fun getPermintaanGudangDikirim(): Call<List<ResListPermintaanItem>>
 
 
-// ======================================================
-//                  NOTIFIKASI
-// ======================================================
+    // ======================================================
+    //                     NOTIFIKASI
+    // ======================================================
+    @GET("api/notifikasi/peringatan/{userId}")
+    fun getPeringatan(@Path("userId") userId: Long): Call<List<Notifikasi>>
 
-    @GET("api/notifikasi/list/{userId}")
-    fun getNotifikasi(
-        @Path("userId") userId: Long
-    ): Call<List<Notifikasi>>
+    @GET("api/notifikasi/pemberitahuan/{userId}")
+    fun getPemberitahuan(@Path("userId") userId: Long): Call<List<Notifikasi>>
 
     @DELETE("api/notifikasi/delete/{id}")
-    fun deleteNotifikasi(
-        @Path("id") id: Long
-    ): Call<ResPesan>
-
+    fun deleteNotifikasi(@Path("id") id: Long): Call<ResPesan>
 }

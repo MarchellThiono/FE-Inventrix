@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".UI.Admin.ui.home.KelolaKategoriFragment">
+
+    <ImageView
+        android:id="@+id/gambar_logo"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/logo"
+        android:layout_marginStart="20dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <!-- Nama sekolah -->
+    <TextView
+        android:id="@+id/nama_sekolah"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/lokasi"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="@color/biru"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="20dp"
+        app:layout_constraintTop_toTopOf="@id/gambar_logo"
+        app:layout_constraintBottom_toBottomOf="@id/gambar_logo"
+        app:layout_constraintStart_toEndOf="@id/gambar_logo"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Garis pemisah di bawah header -->
+    <View
+        android:id="@+id/garis_pemisah_atas"
+        android:layout_width="0dp"
+        android:layout_height="2dp"
+        android:background="@drawable/rounded_corner"
+        android:layout_marginTop="10dp"
+        app:layout_constraintTop_toBottomOf="@id/gambar_logo"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Tombol back -->
+    <ImageView
+        android:id="@+id/btnback"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/baseline_arrow_back"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="20dp"
+        app:layout_constraintTop_toBottomOf="@id/garis_pemisah_atas"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <!-- Judul -->
+    <TextView
+        android:id="@+id/text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Kelola Kategori"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="@color/biru"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintTop_toBottomOf="@id/btnback"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <!-- Garis di bawah judul -->
+    <View
+        android:id="@+id/garis_pemisah_bawah"
+        android:layout_width="0dp"
+        android:layout_height="2dp"
+        android:background="@drawable/rounded_corner"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintTop_toBottomOf="@id/text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Tombol tambah merek -->
+    <LinearLayout
+        android:id="@+id/btnTambahKategori"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="6dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="20dp"
+        app:layout_constraintTop_toBottomOf="@id/garis_pemisah_bawah"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <ImageView
+            android:id="@+id/rvtambah"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/baseline_add_circle_outline_24"
+            />
+
+        <TextView
+            android:id="@+id/tvtambah"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tambah Kategori"
+            android:textSize="16sp"
+            android:textColor="@android:color/black"
+            android:layout_marginStart="6dp" />
+    </LinearLayout>
+
+    <!-- RecyclerView untuk daftar merek -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvKategori"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
+        app:layout_constraintTop_toBottomOf="@id/btnTambahKategori"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:listitem="@layout/item_kelola_kategori" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

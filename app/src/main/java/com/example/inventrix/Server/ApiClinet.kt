@@ -8,7 +8,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object ApiClinet {
-    private const val BASE_URL = "http://192.168.1.4:8080/inventrix/"
+    private const val BASE_URL = "http://192.168.1.14:8080/inventrix/"
 
     private var appContext: Context? = null
 

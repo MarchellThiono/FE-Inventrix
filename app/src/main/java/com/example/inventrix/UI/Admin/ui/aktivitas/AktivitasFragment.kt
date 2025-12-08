@@ -1,10 +1,13 @@
 package com.example.inventrix.UI.Admin.ui.aktivitas
 
 import android.app.AlertDialog
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -13,6 +16,7 @@ import com.example.inventrix.Model.ResListPermintaanItem
 import com.example.inventrix.Model.ResPesan
 import com.example.inventrix.R
 import com.example.inventrix.Server.ApiClinet
+import com.example.inventrix.UI.Admin.DetailPermintaanActivity
 import com.example.inventrix.databinding.FragmentAktivitasBinding
 import retrofit2.Call
 import retrofit2.Callback
@@ -25,10 +29,29 @@ class AktivitasFragment : Fragment() {
 
     private lateinit var adapter: ListPermintaanAdapter
 
-    private var diprosesList = listOf<ResListPermintaanItem>()
+    private var dimintaList = listOf<ResListPermintaanItem>()
     private var dikirimList = listOf<ResListPermintaanItem>()
+    private var selesaiList = listOf<ResListPermintaanItem>()
 
-    private var isDiproses = true
+    private var currentTab = 0 // 0 = DIMINTA, 1 = DIKIRIM, 2 = SELESAI
+
+    // ============================================
+    // Launcher untuk menerima hasil dari DetailPermintaanActivity
+    // ============================================
+    private val startDetailLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == AppCompatActivity.RESULT_OK) {
+
+                // Refresh semua data
+                loadDiminta()
+                loadDikirim()
+                loadSelesai()
+
+                // Pindah ke tab SELESAI otomatis
+                currentTab = 2
+                refreshUI()
+            }
+        }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,33 +60,71 @@ class AktivitasFragment : Fragment() {
         _binding = FragmentAktivitasBinding.inflate(inflater, container, false)
 
         setupRecycler()
-        setupListeners()
+        setupTabListeners()
 
-        loadDiproses()
+        loadDiminta()
         loadDikirim()
+        loadSelesai()
 
         highlightTab()
 
         return binding.root
     }
 
+    // ============================================
+    // RECYCLER VIEW
+    // ============================================
     private fun setupRecycler() {
-        adapter = ListPermintaanAdapter { item ->
-            handleItemClick(item)
-        }
+        adapter = ListPermintaanAdapter(
+            onItemClick = { item -> openDetail(item.id!!) },
+            onDeleteClick = { confirmDelete(it) },
+            showDelete = false
+        )
 
         binding.rvPermintaan.layoutManager = LinearLayoutManager(requireContext())
         binding.rvPermintaan.adapter = adapter
     }
 
-    private fun setupListeners() {
+    // ============================================
+    // OPEN DETAIL PERMINTAAN
+    // ============================================
+    private fun openDetail(id: Int) {
+        val intent = Intent(requireContext(), DetailPermintaanActivity::class.java).apply {
+            putExtra("permintaanId", id)
+            putExtra("role", "OWNER") // Owner/admin toko
+        }
+
+        startDetailLauncher.launch(intent)
+    }
+
+    // ============================================
+    // REFRESH UI
+    // ============================================
+    private fun refreshUI() {
+        adapter.showDelete = (currentTab == 2)
+
+        when (currentTab) {
+            0 -> adapter.updateData(dimintaList)
+            1 -> adapter.updateData(dikirimList)
+            2 -> adapter.updateData(selesaiList)
+        }
+
+        highlightTab()
+    }
+
+    private fun setupTabListeners() {
         binding.diproses.setOnClickListener {
-            isDiproses = true
+            currentTab = 0
             refreshUI()
         }
 
         binding.dikirim.setOnClickListener {
-            isDiproses = false
+            currentTab = 1
+            refreshUI()
+        }
+
+        binding.Selesai.setOnClickListener {
+            currentTab = 2
             refreshUI()
         }
     }
@@ -73,20 +134,24 @@ class AktivitasFragment : Fragment() {
         val inactive = ContextCompat.getColor(requireContext(), android.R.color.black)
 
         binding.diproses.setBackgroundResource(
-            if (isDiproses) R.drawable.bg_chip_selected else R.drawable.bg_chip
+            if (currentTab == 0) R.drawable.bg_chip_selected else R.drawable.bg_chip
         )
         binding.dikirim.setBackgroundResource(
-            if (!isDiproses) R.drawable.bg_chip_selected else R.drawable.bg_chip
+            if (currentTab == 1) R.drawable.bg_chip_selected else R.drawable.bg_chip
+        )
+        binding.Selesai.setBackgroundResource(
+            if (currentTab == 2) R.drawable.bg_chip_selected else R.drawable.bg_chip
         )
 
-        binding.diproses.setTextColor(if (isDiproses) active else inactive)
-        binding.dikirim.setTextColor(if (!isDiproses) active else inactive)
+        binding.diproses.setTextColor(if (currentTab == 0) active else inactive)
+        binding.dikirim.setTextColor(if (currentTab == 1) active else inactive)
+        binding.Selesai.setTextColor(if (currentTab == 2) active else inactive)
     }
 
-    // ============================
-    // LOAD DATA ADMIN
-    // ============================
-    private fun loadDiproses() {
+    // ============================================
+    // LOAD DATA
+    // ============================================
+    private fun loadDiminta() {
         binding.progressBar.visibility = View.VISIBLE
 
         ApiClinet.instance.getAdminPermintaanDiminta()
@@ -96,10 +161,8 @@ class AktivitasFragment : Fragment() {
                     response: Response<List<ResListPermintaanItem>>
                 ) {
                     binding.progressBar.visibility = View.GONE
-                    if (response.isSuccessful) {
-                        diprosesList = response.body() ?: emptyList()
-                        if (isDiproses) refreshUI()
-                    }
+                    dimintaList = response.body() ?: emptyList()
+                    if (currentTab == 0) refreshUI()
                 }
 
                 override fun onFailure(call: Call<List<ResListPermintaanItem>>, t: Throwable) {
@@ -115,81 +178,52 @@ class AktivitasFragment : Fragment() {
                     call: Call<List<ResListPermintaanItem>>,
                     response: Response<List<ResListPermintaanItem>>
                 ) {
-                    if (response.isSuccessful) {
-                        dikirimList = response.body() ?: emptyList()
-                        if (!isDiproses) refreshUI()
-                    }
+                    dikirimList = response.body() ?: emptyList()
+                    if (currentTab == 1) refreshUI()
                 }
 
                 override fun onFailure(call: Call<List<ResListPermintaanItem>>, t: Throwable) {}
             })
     }
 
-    // ============================
-    //   REFRESH UI ADMIN
-    // ============================
-    private fun refreshUI() {
-        if (isDiproses) {
-            adapter.updateData(diprosesList)
-        } else {
-            adapter.updateData(dikirimList)
-        }
-
-        highlightTab()
-    }
-
-    // ============================
-    // DETAIL + KONFIRMASI
-    // ============================
-    private fun handleItemClick(item: ResListPermintaanItem) {
-        val barang = item.barang
-
-        if (item.status == "DIKIRIM") {
-            // ---- KONFIRMASI BARANG SUDAH TIBA ----
-            AlertDialog.Builder(requireContext())
-                .setTitle("Konfirmasi Barang")
-                .setMessage("Apakah barang '${barang?.namaBarang}' sudah tiba di toko dan sesuai?")
-                .setNegativeButton("Batal", null)
-                .setPositiveButton("Konfirmasi") { d, _ ->
-                    d.dismiss()
-                    konfirmasiBarangTiba(item.id!!)
+    private fun loadSelesai() {
+        ApiClinet.instance.getAdminPermintaanSelesai()
+            .enqueue(object : Callback<List<ResListPermintaanItem>> {
+                override fun onResponse(
+                    call: Call<List<ResListPermintaanItem>>,
+                    response: Response<List<ResListPermintaanItem>>
+                ) {
+                    selesaiList = response.body() ?: emptyList()
+                    if (currentTab == 2) refreshUI()
                 }
-                .show()
 
-        } else {
-            // ---- HANYA DETAIL ----
-            AlertDialog.Builder(requireContext())
-                .setTitle("Detail Permintaan")
-                .setMessage(
-                    "Nama Barang : ${barang?.namaBarang}\n" +
-                            "Kode Barang : ${barang?.kodeBarang}\n" +
-                            "Jumlah      : ${item.jumlah}\n" +
-                            "Merek       : ${barang?.merek?.namaMerek}\n" +
-                            "Status      : ${item.status}"
-                )
-                .setPositiveButton("OK", null)
-                .show()
-        }
+                override fun onFailure(call: Call<List<ResListPermintaanItem>>, t: Throwable) {}
+            })
     }
 
-    // ============================
-    //  KONFIRMASI BARANG TIBA
-    // ============================
-    private fun konfirmasiBarangTiba(id: Int) {
-        ApiClinet.instance.konfirmasiPermintaanSelesai(id)
+    // ============================================
+    // DELETE PERMINTAAN (Hanya Selesai)
+    // ============================================
+    private fun confirmDelete(item: ResListPermintaanItem) {
+        AlertDialog.Builder(requireContext())
+            .setTitle("Hapus Permintaan")
+            .setMessage("Yakin ingin menghapus permintaan ini?")
+            .setPositiveButton("Hapus") { _, _ -> hapusPermintaan(item.id!!) }
+            .setNegativeButton("Batal", null)
+            .show()
+    }
+
+    private fun hapusPermintaan(id: Int) {
+        ApiClinet.instance.hapusPermintaan(id)
             .enqueue(object : Callback<ResPesan> {
                 override fun onResponse(
                     call: Call<ResPesan>,
                     response: Response<ResPesan>
                 ) {
-                    // refresh data dari server
-                    loadDiproses()
-                    loadDikirim()
+                    loadSelesai()
                 }
 
-                override fun onFailure(call: Call<ResPesan>, t: Throwable) {
-                    t.printStackTrace()
-                }
+                override fun onFailure(call: Call<ResPesan>, t: Throwable) {}
             })
     }
 

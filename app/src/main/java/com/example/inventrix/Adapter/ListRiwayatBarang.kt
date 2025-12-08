@@ -7,7 +7,7 @@ import com.example.inventrix.Model.ItemsItem
 import com.example.inventrix.databinding.ItemRiwayatBarangBinding
 
 class ListRiwayatBarang(
-    private var list: List<ItemsItem?>
+    private var list: List<ItemsItem>
 ) : RecyclerView.Adapter<ListRiwayatBarang.ViewHolder>() {
 
     inner class ViewHolder(val binding: ItemRiwayatBarangBinding) :
@@ -23,7 +23,7 @@ class ListRiwayatBarang(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = list[position] ?: return
+        val item = list[position]
 
         with(holder.binding) {
             tvNamaBarang.text = item.namaBarang ?: "-"
@@ -34,7 +34,7 @@ class ListRiwayatBarang(
 
     override fun getItemCount(): Int = list.size
 
-    fun update(newList: List<ItemsItem?>) {
+    fun update(newList: List<ItemsItem>) {
         list = newList
         notifyDataSetChanged()
     }

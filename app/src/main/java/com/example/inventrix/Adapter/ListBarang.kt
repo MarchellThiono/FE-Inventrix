@@ -17,8 +17,6 @@ import com.example.inventrix.toHargaInt
 
 class ListBarang(
     private val onItemClick: (DataItem) -> Unit,
-    private val onEditClick: (DataItem) -> Unit,
-    // fragment akan melakukan update ke KeranjangManager melalui callback ini
     private val onAddClick: (barangId: Int, jumlah: Int) -> Unit
 ) : RecyclerView.Adapter<ListBarang.ViewHolder>() {
 
@@ -37,13 +35,14 @@ class ListBarang(
         val btnKurang: ImageButton = itemView.findViewById(R.id.btnKurang)
         val tvJumlahKlik: TextView = itemView.findViewById(R.id.tvJumlahKlik)
 
-        val btnEdit: ImageButton = itemView.findViewById(R.id.btnEdit)
+        // btnEdit optional: jika id ada di layout maka akan di-bind, kalau tidak -> null
+        val btnEdit: ImageButton? = itemView.findViewById(R.id.btnEdit)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view =
-            LayoutInflater.from(parent.context).inflate(R.layout.item_barang_admin, parent, false)
-        return ViewHolder(view)
+        val v = LayoutInflater.from(parent.context)
+            .inflate(R.layout.item_barang_admin, parent, false)
+        return ViewHolder(v)
     }
 
     override fun getItemCount(): Int = listBarang.size
@@ -51,89 +50,92 @@ class ListBarang(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = listBarang[position]
 
-        val hargaInt = toHargaInt(item.hargaJual)
-        holder.tvHarga.text = formatRupiah(hargaInt)
+        // Harga
+        val harga = toHargaInt(item.hargaJual)
+        holder.tvHarga.text = formatRupiah(harga)
 
+        // Stok
         val stokToko = item.stokToko ?: 0
-
-        // SET DATA SESUAI XML
-        holder.tvName.text = item.namaBarang ?: "-"
-        holder.tvKode.text = item.kodeBarang ?: "-"
         holder.tvStok.text = "Stok: $stokToko"
 
+        // Nama dan kode
+        holder.tvName.text = item.namaBarang ?: "-"
+        holder.tvKode.text = item.kodeBarang ?: "-"
+
+        // Gambar
         Glide.with(holder.itemView.context)
             .load(item.imageUrl)
             .into(holder.ivLogo)
 
-        // Klik item → detail barang
+        // Jika layout punya btnEdit, sembunyikan (karena HomeFragment hanya kasir)
+        holder.btnEdit?.visibility = View.GONE
+
+        // Klik item buka detail barang
         holder.itemView.setOnClickListener { onItemClick(item) }
 
-        // Klik edit → pindah halaman edit
-        holder.btnEdit.setOnClickListener { onEditClick(item) }
-
-        // ambil jumlah dalam keranjang (selalu baca dari KeranjangManager)
+        // Ambil jumlah di keranjang
         val jumlahKeranjang = KeranjangManager.getJumlahForBarang(item.id ?: 0)
 
+        // Setup UI counter kasir
         if (jumlahKeranjang > 0) {
-            holder.btnTambahAwal.visibility = View.GONE
             holder.layoutCounter.visibility = View.VISIBLE
+            holder.btnTambahAwal.visibility = View.GONE
             holder.tvJumlahKlik.text = jumlahKeranjang.toString()
         } else {
-            holder.btnTambahAwal.visibility = View.VISIBLE
             holder.layoutCounter.visibility = View.GONE
-            holder.tvJumlahKlik.text = "0"
+            holder.btnTambahAwal.visibility = View.VISIBLE
         }
 
-        // --- ACTIONS ---
-        // tambah pertama
+        // =============================================================
+        // 🔥 TOMBOL TAMBAH AWAL (+)
+        // =============================================================
         holder.btnTambahAwal.setOnClickListener {
             if (stokToko <= 0) {
-                Toast.makeText(holder.itemView.context, "Stok barang tidak cukup", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    holder.itemView.context,
+                    "Stok barang tidak cukup",
+                    Toast.LENGTH_SHORT
+                ).show()
                 return@setOnClickListener
             }
 
-            // posisi aman
-            val pos = try { holder.adapterPosition } catch (e: Throwable) { holder.adapterPosition }
-            if (pos == RecyclerView.NO_POSITION) return@setOnClickListener
-
             onAddClick(item.id!!, 1)
-            // UI di adapter akan di-refresh dari fragment (fragment memanggil notifyItemChanged atau notifyDataSetChanged)
-            // tapi untuk safety kita panggil notifyItemChanged juga di sini
-            notifyItemChanged(pos)
+            notifyItemChanged(position)
         }
 
-        // tombol +
+        // =============================================================
+        // 🔥 TOMBOL TAMBAH (+)
+        // =============================================================
         holder.btnTambah.setOnClickListener {
-            val pos = try { holder.adapterPosition } catch (e: Throwable) { holder.adapterPosition }
-            if (pos == RecyclerView.NO_POSITION) return@setOnClickListener
-
-            val now = KeranjangManager.getJumlahForBarang(item.id ?: 0)
+            val now = KeranjangManager.getJumlahForBarang(item.id!!)
             val next = now + 1
 
             if (next > stokToko) {
-                Toast.makeText(holder.itemView.context, "Stok barang tidak cukup", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    holder.itemView.context,
+                    "Stok tidak cukup",
+                    Toast.LENGTH_SHORT
+                ).show()
                 return@setOnClickListener
             }
 
             onAddClick(item.id!!, next)
-            notifyItemChanged(pos)
+            notifyItemChanged(position)
         }
 
-        // tombol -
+        // =============================================================
+        // 🔥 TOMBOL KURANG (-)
+        // =============================================================
         holder.btnKurang.setOnClickListener {
-            val pos = try { holder.adapterPosition } catch (e: Throwable) { holder.adapterPosition }
-            if (pos == RecyclerView.NO_POSITION) return@setOnClickListener
-
-            val now = KeranjangManager.getJumlahForBarang(item.id ?: 0)
+            val now = KeranjangManager.getJumlahForBarang(item.id!!)
 
             if (now > 1) {
-                val prev = now - 1
-                onAddClick(item.id!!, prev)
+                onAddClick(item.id!!, now - 1)
             } else {
-                // jika sekarang 1 -> setelah dikurang akan jadi 0 => hapus dari keranjang
                 onAddClick(item.id!!, 0)
             }
-            notifyItemChanged(pos)
+
+            notifyItemChanged(position)
         }
     }
 

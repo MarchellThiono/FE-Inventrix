@@ -11,16 +11,6 @@
         android:label="Home"
         tools:layout="@layout/fragment_home" >
         <action
-            android:id="@+id/action_homeFragment_to_tambahBarangFragment"
-            app:destination="@id/tambahBarangFragment" />
-        <action
-            android:id="@+id/action_homeFragment_to_kelolaMerekFragment"
-            app:destination="@id/kelolaMerekFragment" />
-        <action
-            android:id="@+id/action_homeFragment_to_notifikasiFragment"
-            app:destination="@id/notifikasiFragment" />
-
-        <action
             android:id="@+id/action_homeFragment_to_detailAdminFragment"
             app:destination="@id/detailAdminFragment" />
 
@@ -30,53 +20,10 @@
         android:id="@+id/navigation_keranjang"
         android:name="com.example.inventrix.UI.Admin.ui.keranjang.KeranjangFragment"
         android:label="@string/keranjang"
-        tools:layout="@layout/fragment_keranjang" />
-
-    <fragment
-        android:id="@+id/navigation_aktivitas"
-        android:name="com.example.inventrix.UI.Admin.ui.aktivitas.AktivitasFragment"
-        android:label="@string/aktivitas"
-        tools:layout="@layout/fragment_aktivitas" />
-
-    <fragment
-        android:id="@+id/navigation_riwayat"
-        android:name="com.example.inventrix.UI.Admin.ui.riwayat.RiwayatFragment"
-        android:label="@string/riwayat"
-        tools:layout="@layout/fragment_riwayat">
+        tools:layout="@layout/fragment_keranjang" >
         <action
-            android:id="@+id/action_navigation_riwayat_to_navigation_detail_riwayat"
+            android:id="@+id/action_navigation_keranjang_to_navigation_detail_riwayat"
             app:destination="@id/navigation_detail_riwayat" />
-    </fragment>
-
-    <fragment
-        android:id="@+id/tambahBarangFragment"
-        android:name="com.example.inventrix.UI.Admin.ui.home.TambahBarangFragment"
-        android:label="Tambah Barang"
-        tools:layout="@layout/fragment_tambah_barang" >
-    <action
-        android:id="@+id/action_tambahBarangFragment_to_navigation_home"
-        app:destination="@id/navigation_home" />
-    </fragment>
-
-    <fragment
-        android:id="@+id/kelolaMerekFragment"
-        android:name="com.example.inventrix.UI.Admin.ui.home.KelolaMerekFragment"
-        android:label="Kelola Merek"
-        tools:layout="@layout/fragment_kelola_merek">
-
-        <action
-            android:id="@+id/action_kelolaMerekFragment_to_navigation_home"
-            app:destination="@id/navigation_home" />
-
-    </fragment>
-
-    <fragment android:id="@+id/notifikasiFragment"
-        android:name="com.example.inventrix.UI.Admin.ui.home.NotifikasiFragment"
-        android:label="Notifikasi"
-        tools:layout="@layout/fragment_notifikasi">
-        <action
-            android:id="@+id/action_notifikasiFragment_to_navigation_home"
-            app:destination="@id/navigation_home" />
     </fragment>
 
     <fragment
@@ -85,21 +32,8 @@
         android:label="Detail Barang Admin"
         tools:layout="@layout/fragment_detail_admin">
         <action
-            android:id="@+id/action_detailAdminFragment_to_laporanBarangAdminFragment"
-            app:destination="@id/laporanBarangAdminFragment" />
-        <action
             android:id="@+id/action_detailAdminFragment_to_navigation_home"
             app:destination="@id/navigation_home" />
-    </fragment>
-
-    <fragment
-        android:id="@+id/laporanBarangAdminFragment"
-        android:name="com.example.inventrix.UI.Admin.ui.home.LaporanBarangAdminFragment"
-        android:label="Laporan Barang Admin"
-        tools:layout="@layout/fragment_laporan_barang_admin" >
-        <action
-            android:id="@+id/action_laporanBarangAdminFragment_to_detailAdminFragment"
-            app:destination="@id/detailAdminFragment" />
     </fragment>
 
     <fragment
@@ -107,9 +41,16 @@
         android:name="com.example.inventrix.UI.Admin.ui.riwayat.DetailRiwayatFragment"
         android:label="detail riwayat"
         tools:layout="@layout/fragment_detail_riwayat">
+
+        <!-- WAJIB ditambahkan -->
+        <argument
+            android:name="laporanId"
+            app:argType="long" />
+
         <action
-            android:id="@+id/action_navigation_detail_riwayat_to_navigation_riwayat"
-            app:destination="@id/navigation_riwayat" />
+            android:id="@+id/action_navigation_detail_riwayat_to_navigation_home"
+            app:destination="@id/navigation_home" />
     </fragment>
+
 
 </navigation>
